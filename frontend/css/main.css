@@ -1,0 +1,1007 @@
+/* ============================================================
+   main.css — Global Design System
+   Roadmap Tracker · Personal Learning Path App
+   ============================================================
+
+   Table of Contents:
+   1.  Google Fonts Import
+   2.  CSS Custom Properties (Design Tokens)
+       2a. Light Theme
+       2b. Dark Theme (default)
+       2c. Roadmap Theme Variables
+   3.  CSS Reset & Base
+   4.  Typography
+   5.  Layout Utilities
+   6.  Navbar (shared)
+   7.  Buttons
+   8.  Form Elements
+   9.  Badges / Status
+   10. Modal (base)
+   11. Toast Notification
+   12. Spinner / Loading
+   13. Scrollbar
+   14. Responsive Breakpoints
+   ============================================================ */
+
+
+/* ============================================================
+   1. Google Fonts Import
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+/* ============================================================
+   2. CSS Custom Properties (Design Tokens)
+   ============================================================ */
+
+/* --- 2b. Dark Theme (default) --- */
+:root,
+[data-theme="dark"] {
+  /* Surface / Background */
+  --color-bg:           #0d0d0f;
+  --color-bg-secondary: #111114;
+  --color-surface:      #18181c;
+  --color-surface-alt:  #1e1e24;
+  --color-surface-hover:#242430;
+  --color-border:       #2a2a35;
+  --color-border-subtle:#1f1f28;
+
+  /* Text */
+  --color-text-primary:  #f0f0f5;
+  --color-text-secondary:#9090a8;
+  --color-text-muted:    #5a5a72;
+  --color-text-inverse:  #0d0d0f;
+
+  /* Accent (overridden per roadmap) */
+  --color-accent:        #7c3aed;
+  --color-accent-hover:  #6d28d9;
+  --color-accent-subtle: rgba(124, 58, 237, 0.12);
+  --color-accent-border: rgba(124, 58, 237, 0.3);
+
+  /* Semantic */
+  --color-success:       #22c55e;
+  --color-success-bg:    rgba(34, 197, 94, 0.12);
+  --color-warning:       #f97316;
+  --color-warning-bg:    rgba(249, 115, 22, 0.12);
+  --color-pending:       #6b7280;
+  --color-pending-bg:    rgba(107, 114, 128, 0.15);
+  --color-danger:        #ef4444;
+  --color-danger-hover:  #dc2626;
+  --color-danger-bg:     rgba(239, 68, 68, 0.12);
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  /* Navbar */
+  --navbar-bg:     rgba(13, 13, 15, 0.92);
+  --navbar-border: #1e1e28;
+
+  /* Scrollbar */
+  --scrollbar-track: #111114;
+  --scrollbar-thumb: #2a2a35;
+}
+
+/* --- 2a. Light Theme --- */
+[data-theme="light"] {
+  /* Surface / Background */
+  --color-bg:           #f8f8fc;
+  --color-bg-secondary: #f0f0f8;
+  --color-surface:      #ffffff;
+  --color-surface-alt:  #f4f4fa;
+  --color-surface-hover:#eeeef8;
+  --color-border:       #e2e2ee;
+  --color-border-subtle:#ebebf5;
+
+  /* Text */
+  --color-text-primary:  #111118;
+  --color-text-secondary:#52527a;
+  --color-text-muted:    #9898b8;
+  --color-text-inverse:  #ffffff;
+
+  /* Accent */
+  --color-accent:        #7c3aed;
+  --color-accent-hover:  #6d28d9;
+  --color-accent-subtle: rgba(124, 58, 237, 0.08);
+  --color-accent-border: rgba(124, 58, 237, 0.25);
+
+  /* Semantic */
+  --color-success:       #16a34a;
+  --color-success-bg:    rgba(22, 163, 74, 0.1);
+  --color-warning:       #ea580c;
+  --color-warning-bg:    rgba(234, 88, 12, 0.1);
+  --color-pending:       #6b7280;
+  --color-pending-bg:    rgba(107, 114, 128, 0.1);
+  --color-danger:        #dc2626;
+  --color-danger-hover:  #b91c1c;
+  --color-danger-bg:     rgba(220, 38, 38, 0.1);
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.14);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  /* Navbar */
+  --navbar-bg:     rgba(248, 248, 252, 0.92);
+  --navbar-border: #e2e2ee;
+
+  /* Scrollbar */
+  --scrollbar-track: #f0f0f8;
+  --scrollbar-thumb: #cccce0;
+}
+
+/* --- 2c. Roadmap Theme Color Overrides ---
+   Applied via data-roadmap attribute on <body> or via JS
+   Each overrides --color-accent, --color-accent-hover,
+   --color-accent-subtle, --color-accent-border
+   --------------------------------------------------------- */
+
+[data-roadmap="dsa"] {
+  --color-accent:        #7c3aed;
+  --color-accent-hover:  #6d28d9;
+  --color-accent-subtle: rgba(124, 58, 237, 0.12);
+  --color-accent-border: rgba(124, 58, 237, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #7c3aed22, #6d28d911);
+}
+
+[data-roadmap="terraform"] {
+  --color-accent:        #2563eb;
+  --color-accent-hover:  #1d4ed8;
+  --color-accent-subtle: rgba(37, 99, 235, 0.12);
+  --color-accent-border: rgba(37, 99, 235, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #2563eb22, #1d4ed811);
+}
+
+[data-roadmap="linux"] {
+  --color-accent:        #16a34a;
+  --color-accent-hover:  #15803d;
+  --color-accent-subtle: rgba(22, 163, 74, 0.12);
+  --color-accent-border: rgba(22, 163, 74, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #16a34a22, #15803d11);
+}
+
+[data-roadmap="dbms"] {
+  --color-accent:        #0891b2;
+  --color-accent-hover:  #0e7490;
+  --color-accent-subtle: rgba(8, 145, 178, 0.12);
+  --color-accent-border: rgba(8, 145, 178, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #0891b222, #0e749011);
+}
+
+[data-roadmap="os"] {
+  --color-accent:        #dc2626;
+  --color-accent-hover:  #b91c1c;
+  --color-accent-subtle: rgba(220, 38, 38, 0.12);
+  --color-accent-border: rgba(220, 38, 38, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #dc262622, #b91c1c11);
+}
+
+[data-roadmap="oops"] {
+  --color-accent:        #db2777;
+  --color-accent-hover:  #be185d;
+  --color-accent-subtle: rgba(219, 39, 119, 0.12);
+  --color-accent-border: rgba(219, 39, 119, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #db277722, #be185d11);
+}
+
+[data-roadmap="cn"] {
+  --color-accent:        #4f46e5;
+  --color-accent-hover:  #4338ca;
+  --color-accent-subtle: rgba(79, 70, 229, 0.12);
+  --color-accent-border: rgba(79, 70, 229, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #4f46e522, #4338ca11);
+}
+
+[data-roadmap="cloud"] {
+  --color-accent:        #0ea5e9;
+  --color-accent-hover:  #0284c7;
+  --color-accent-subtle: rgba(14, 165, 233, 0.12);
+  --color-accent-border: rgba(14, 165, 233, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #0ea5e922, #0284c711);
+}
+
+[data-roadmap="aws"] {
+  --color-accent:        #ea580c;
+  --color-accent-hover:  #c2410c;
+  --color-accent-subtle: rgba(234, 88, 12, 0.12);
+  --color-accent-border: rgba(234, 88, 12, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #ea580c22, #c2410c11);
+}
+
+[data-roadmap="systemdesign"] {
+  --color-accent:        #0d9488;
+  --color-accent-hover:  #0f766e;
+  --color-accent-subtle: rgba(13, 148, 136, 0.12);
+  --color-accent-border: rgba(13, 148, 136, 0.3);
+  --roadmap-gradient:    linear-gradient(135deg, #0d948822, #0f766e11);
+}
+
+
+/* ============================================================
+   3. CSS Reset & Base
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+
+/* ============================================================
+   4. Typography
+   ============================================================ */
+
+.text-xs   { font-size: 0.75rem;   line-height: 1.5; }
+.text-sm   { font-size: 0.8125rem; line-height: 1.5; }
+.text-base { font-size: 0.9375rem; line-height: 1.6; }
+.text-lg   { font-size: 1.0625rem; line-height: 1.5; }
+.text-xl   { font-size: 1.25rem;   line-height: 1.4; }
+.text-2xl  { font-size: 1.5rem;    line-height: 1.3; }
+.text-3xl  { font-size: 1.875rem;  line-height: 1.2; }
+
+.font-medium  { font-weight: 500; }
+.font-semibold{ font-weight: 600; }
+.font-bold    { font-weight: 700; }
+
+.text-primary   { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted     { color: var(--color-text-muted); }
+.text-accent    { color: var(--color-accent); }
+
+
+/* ============================================================
+   5. Layout Utilities
+   ============================================================ */
+
+.main-content {
+  padding-top: calc(60px + 2rem); /* navbar height + spacing */
+  min-height: 100vh;
+}
+
+.content-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.page-subtitle {
+  margin-top: 0.375rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  border: none;
+  margin: 1.5rem 0;
+}
+
+
+/* ============================================================
+   6. Navbar (shared across pages)
+   ============================================================ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 60px;
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+
+.navbar-brand:hover {
+  color: var(--color-accent);
+}
+
+.navbar-brand .brand-icon {
+  font-size: 1.25rem;
+  color: var(--color-accent);
+}
+
+.navbar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.navbar-back:hover {
+  color: var(--color-text-primary);
+}
+
+.navbar-divider {
+  color: var(--color-border);
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.navbar-roadmap-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-border);
+  color: var(--color-text-primary);
+}
+
+
+/* ============================================================
+   7. Buttons
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 1;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Primary */
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: var(--color-danger-hover);
+  border-color: var(--color-danger-hover);
+}
+
+/* Size variants */
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  border-radius: 6px;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Disabled state */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   8. Form Elements
+   ============================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.form-label span[aria-hidden] {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5625rem 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.form-input:hover:not(:focus) {
+  border-color: var(--color-accent-border);
+}
+
+/* Textarea */
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+/* Select */
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+/* Error state */
+.form-input.is-error {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px var(--color-danger-bg);
+}
+
+.form-error {
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+  min-height: 1.2em;
+}
+
+/* Alert banner in form */
+.form-alert {
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-danger-bg);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+
+/* ============================================================
+   9. Badges / Status
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Completed → Green */
+.badge-completed {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.badge-completed::before {
+  background: var(--color-success);
+}
+
+/* Ongoing → Orange */
+.badge-ongoing {
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.badge-ongoing::before {
+  background: var(--color-warning);
+}
+
+/* Pending → Grey */
+.badge-pending {
+  color: var(--color-pending);
+  background: var(--color-pending-bg);
+}
+
+.badge-pending::before {
+  background: var(--color-pending);
+}
+
+
+/* ============================================================
+   10. Modal (base)
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  /* Fade in animation */
+  animation: overlay-in 0.15s ease;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  /* Slide up animation */
+  animation: modal-in 0.2s ease;
+}
+
+.modal-sm {
+  max-width: 380px;
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 0;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.modal-form {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-alt);
+}
+
+
+/* ============================================================
+   11. Toast Notification
+   ============================================================ */
+
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 300;
+  padding: 0.75rem 1.125rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  color: var(--color-text-primary);
+  max-width: 320px;
+  animation: toast-in 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+.toast.toast-success {
+  border-left: 3px solid var(--color-success);
+}
+
+.toast.toast-error {
+  border-left: 3px solid var(--color-danger);
+}
+
+.toast.toast-info {
+  border-left: 3px solid var(--color-accent);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(8px); }
+}
+
+
+/* ============================================================
+   12. Spinner / Loading
+   ============================================================ */
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Page-level loading overlay */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.empty-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.empty-sub {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+
+/* ============================================================
+   13. Scrollbar
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+
+/* ============================================================
+   14. Responsive Breakpoints
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .content-inner {
+    padding: 0 1.25rem 3rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .content-inner {
+    padding: 0 1rem 3rem;
+  }
+
+  .main-content {
+    padding-top: calc(60px + 1.25rem);
+  }
+
+  .page-title {
+    font-size: 1.375rem;
+  }
+
+  .modal {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 92vh;
+    overflow-y: auto;
+    animation: modal-mobile-in 0.25s ease;
+  }
+
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  @keyframes modal-mobile-in {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-sm {
+    max-width: 100%;
+  }
+
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: 100%;
+  }
+
+  .navbar-inner {
+    padding: 0 1rem;
+  }
+}

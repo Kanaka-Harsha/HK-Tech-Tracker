@@ -1,0 +1,363 @@
+/* ============================================================
+   dashboard.css — Dashboard Page Styles
+   Roadmap Tracker
+   ============================================================
+
+   Table of Contents:
+   1. Stats Bar
+   2. Cards Section & Grid
+   3. Roadmap Card
+   4. Card Header (icon + title)
+   5. Card Stats
+   6. Card Progress Bar
+   7. Card Hover & Focus States
+   8. Loading / Empty States
+   9. Responsive
+   ============================================================ */
+
+
+/* ============================================================
+   1. Stats Bar
+   ============================================================ */
+
+.stats-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 1px; /* gap creates the divider via background showing through */
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 0.75rem;
+  background: var(--color-surface);
+  transition: background 0.15s ease;
+}
+
+.stat-item:hover {
+  background: var(--color-surface-alt);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-value--success { color: var(--color-success); }
+.stat-value--warning { color: var(--color-warning); }
+.stat-value--muted   { color: var(--color-text-muted); }
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   2. Cards Section & Grid
+   ============================================================ */
+
+.cards-section {
+  /* Loading state is a direct child; grid is also a child */
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.125rem;
+}
+
+/* Loading placeholder inside the section */
+.cards-loading {
+  grid-column: 1 / -1;
+}
+
+
+/* ============================================================
+   3. Roadmap Card
+   ============================================================ */
+
+.roadmap-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.375rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow  0.2s ease,
+    transform   0.15s ease,
+    background  0.15s ease;
+  outline: none;
+
+  /* Top accent line — colored per roadmap theme */
+  overflow: hidden;
+}
+
+/* Top colored accent bar */
+.roadmap-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-accent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.roadmap-card:hover::before,
+.roadmap-card:focus-visible::before {
+  opacity: 1;
+}
+
+.roadmap-card:hover,
+.roadmap-card:focus-visible {
+  border-color: var(--color-accent-border);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--color-accent-border);
+  transform: translateY(-2px);
+  background: var(--color-surface-alt);
+}
+
+.roadmap-card:active {
+  transform: translateY(0);
+}
+
+/* Keyboard focus ring */
+.roadmap-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+
+/* ============================================================
+   4. Card Header (icon + title + last-updated)
+   ============================================================ */
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.card-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--color-accent-subtle);
+  border: 1px solid var(--color-accent-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  line-height: 1;
+  transition: background 0.2s ease;
+}
+
+.roadmap-card:hover .card-icon {
+  background: var(--roadmap-gradient, var(--color-accent-subtle));
+}
+
+.card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-last-updated {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+
+/* ============================================================
+   5. Card Stats (completed / ongoing / pending counts)
+   ============================================================ */
+
+.card-stats {
+  display: flex;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.card-stat {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.card-stat strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-right: 0.2rem;
+}
+
+.card-stat--completed strong { color: var(--color-success); }
+.card-stat--ongoing  strong { color: var(--color-warning); }
+.card-stat--pending  strong { color: var(--color-text-muted); }
+
+
+/* ============================================================
+   6. Card Progress Bar
+   ============================================================ */
+
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.progress-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--color-surface-hover);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 2.5rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Zero progress — show faint track */
+.progress-bar-fill[style*="width: 0"] {
+  background: transparent;
+}
+
+/* Full progress — extra glow */
+.progress-bar-fill[style*="width: 100%"] {
+  box-shadow: 0 0 6px var(--color-success);
+  background: var(--color-success);
+}
+
+
+/* ============================================================
+   7. Card Hover & Focus Accessibility
+   ============================================================ */
+
+/* Arrow hint that appears on hover */
+.card-arrow {
+  position: absolute;
+  top: 1.375rem;
+  right: 1.125rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.roadmap-card:hover .card-arrow,
+.roadmap-card:focus-visible .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* ============================================================
+   8. Loading / Empty States (dashboard-specific override)
+   ============================================================ */
+
+.cards-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 5rem 2rem;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+
+/* ============================================================
+   9. Responsive
+   ============================================================ */
+
+/* Tablet: 2-column grid */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-bar {
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    flex: 1 1 calc(50% - 1px);
+  }
+}
+
+/* Mobile: 1-column grid */
+@media (max-width: 640px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .stats-bar {
+    gap: 1px;
+    border-radius: 10px;
+  }
+
+  .stat-item {
+    flex: 1 1 calc(50% - 1px);
+    padding: 0.875rem 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .roadmap-card {
+    padding: 1.125rem;
+  }
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sign in to your personal Roadmap Tracker" />
+  <title>Sign In — Roadmap Tracker</title>
+
+  <!-- Preconnect for font performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets (theme.js runs before render to avoid flash) -->
+  <script>
+    // Apply saved theme immediately to prevent flash of wrong theme
+    (function () {
+      const saved = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="login-page">
+
+  <!-- =====================================================
+       Theme Toggle (fixed, top-right)
+       ===================================================== -->
+  <button
+    class="theme-toggle login-theme-toggle"
+    id="theme-toggle"
+    aria-label="Toggle dark/light mode"
+    title="Toggle theme"
+  >
+    <span class="theme-icon" id="theme-icon" aria-hidden="true">☀</span>
+  </button>
+
+  <!-- =====================================================
+       Login Page — Centered Card
+       ===================================================== -->
+  <main class="login-container" role="main" id="login-container">
+    <div class="login-card" id="login-card">
+
+      <!-- Brand / Logo -->
+      <div class="login-brand">
+        <div class="login-brand-icon" aria-hidden="true">⬡</div>
+        <h1 class="login-brand-name">Roadmap Tracker</h1>
+        <p class="login-brand-tagline">Your personal learning path</p>
+      </div>
+
+      <!-- Divider -->
+      <hr class="divider" />
+
+      <!-- Login Form -->
+      <form class="login-form" id="login-form" novalidate autocomplete="on">
+
+        <!-- Global error alert (shown on wrong credentials) -->
+        <div class="form-alert" id="login-alert" role="alert" hidden></div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-input"
+            placeholder="Enter your username"
+            autocomplete="username"
+            spellcheck="false"
+            required
+          />
+          <span class="form-error" id="username-error" role="alert"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+            <!-- Toggle password visibility -->
+            <button
+              type="button"
+              class="password-toggle"
+              id="password-toggle"
+              aria-label="Show password"
+              tabindex="-1"
+            >
+              <span id="password-toggle-icon" aria-hidden="true">👁</span>
+            </button>
+          </div>
+          <span class="form-error" id="password-error" role="alert"></span>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-full"
+          id="login-btn"
+          aria-label="Sign in to Roadmap Tracker"
+        >
+          <span class="btn-text" id="login-btn-text">Sign In</span>
+          <span class="login-spinner" id="login-spinner" aria-hidden="true" hidden>
+            <span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>
+          </span>
+        </button>
+
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive" hidden></div>
+
+  <!-- Scripts: theme first (already inlined above for flash-prevention), then logic -->
+  <script src="js/theme.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

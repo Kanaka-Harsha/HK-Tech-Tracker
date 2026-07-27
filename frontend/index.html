@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadmap Tracker</title>
+</head>
+<body>
+  <script>
+    // Entry point: redirect based on session
+    const token = sessionStorage.getItem('auth_token');
+    if (token) {
+      window.location.replace('dashboard.html');
+    } else {
+      window.location.replace('login.html');
+    }
+  </script>
+</body>
+</html>

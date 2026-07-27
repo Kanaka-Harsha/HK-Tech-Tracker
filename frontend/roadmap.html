@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- meta description is updated dynamically by roadmap.js -->
+  <meta name="description" content="View and manage your roadmap tasks" />
+  <!-- page title is updated dynamically by roadmap.js -->
+  <title>Roadmap — Roadmap Tracker</title>
+
+  <!-- Prevent theme flash -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/roadmap.css" />
+</head>
+<body class="roadmap-page">
+
+  <!-- =====================================================
+       Navbar
+       ===================================================== -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="navbar-inner">
+
+      <!-- Left: breadcrumb -->
+      <div class="navbar-left">
+        <a href="dashboard.html" class="navbar-back" aria-label="Back to Dashboard">
+          <span aria-hidden="true">←</span>
+          Dashboard
+        </a>
+        <span class="navbar-divider" aria-hidden="true">/</span>
+        <h1 class="navbar-roadmap-name" id="navbar-roadmap-name" aria-live="polite">Loading…</h1>
+      </div>
+
+      <!-- Right: actions -->
+      <nav class="navbar-actions" aria-label="Navbar actions">
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Toggle dark/light mode"
+          title="Toggle theme"
+        >
+          <span class="theme-icon" id="theme-icon" aria-hidden="true">☀</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="logout-btn" aria-label="Sign out">
+          Sign Out
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- =====================================================
+       Main Content
+       ===================================================== -->
+  <main class="main-content" role="main" id="main-content">
+    <div class="content-inner">
+
+      <!-- -----------------------------------------------
+           Roadmap Header: title + progress summary
+           ----------------------------------------------- -->
+      <section class="roadmap-header" id="roadmap-header" aria-labelledby="roadmap-title">
+
+        <div class="roadmap-title-row">
+          <!-- Icon: set by theme.js based on roadmap ID -->
+          <div class="roadmap-icon" id="roadmap-icon" aria-hidden="true"></div>
+          <div class="roadmap-title-text">
+            <h2 class="roadmap-title" id="roadmap-title" aria-live="polite">—</h2>
+            <p class="roadmap-meta" id="roadmap-meta">
+              <span id="meta-total">—</span> tasks ·
+              Last updated <span id="meta-updated">—</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="roadmap-progress" id="roadmap-progress">
+          <div class="progress-counts" id="progress-counts" aria-live="polite">
+            <span class="progress-count progress-count--success">
+              <span id="count-completed">0</span> Completed
+            </span>
+            <span class="progress-count progress-count--warning">
+              <span id="count-ongoing">0</span> Ongoing
+            </span>
+            <span class="progress-count progress-count--muted">
+              <span id="count-pending">0</span> Pending
+            </span>
+          </div>
+
+          <div class="progress-bar-row">
+            <div
+              class="progress-bar-track"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label="Completion percentage"
+              id="progress-bar-track"
+            >
+              <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%"></div>
+            </div>
+            <span class="progress-bar-label" id="progress-percent">0%</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- -----------------------------------------------
+           Toolbar: Search + Filter + Sort + Add
+           ----------------------------------------------- -->
+      <section class="toolbar" role="search" aria-label="Task search and filter controls">
+        <div class="toolbar-left">
+
+          <!-- Search -->
+          <div class="search-wrapper">
+            <span class="search-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              class="search-input"
+              id="search-input"
+              placeholder="Search topics…"
+              aria-label="Search tasks by topic or description"
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Status filter -->
+          <select
+            class="filter-select form-select"
+            id="filter-status"
+            aria-label="Filter by status"
+          >
+            <option value="all">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Completed">Completed</option>
+          </select>
+
+          <!-- Sort -->
+          <select
+            class="filter-select form-select"
+            id="sort-by"
+            aria-label="Sort tasks"
+          >
+            <option value="default">Default Order</option>
+            <option value="main_topic">Main Topic A–Z</option>
+            <option value="sub_topic">Sub Topic A–Z</option>
+            <option value="status">By Status</option>
+          </select>
+
+        </div>
+
+        <div class="toolbar-right">
+          <button class="btn btn-primary" id="add-task-btn" aria-label="Add new task">
+            <span aria-hidden="true">+</span> Add Task
+          </button>
+        </div>
+      </section>
+
+      <!-- -----------------------------------------------
+           Table Section
+           ----------------------------------------------- -->
+      <section class="table-section" aria-label="Tasks table">
+
+        <!-- Loading state -->
+        <div class="loading-state" id="table-loading" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Loading tasks…</p>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="table-empty" hidden>
+          <p class="empty-icon" aria-hidden="true">📭</p>
+          <p class="empty-title">No tasks yet</p>
+          <p class="empty-sub">Click <strong>+ Add Task</strong> to start building this roadmap.</p>
+        </div>
+
+        <!-- No results state (search/filter returned nothing) -->
+        <div class="empty-state" id="table-no-results" hidden>
+          <p class="empty-icon" aria-hidden="true">🔍</p>
+          <p class="empty-title">No matching tasks</p>
+          <p class="empty-sub">Try adjusting your search or filter.</p>
+        </div>
+
+        <!-- Table wrapper (desktop) -->
+        <div class="table-wrapper" id="table-wrapper" hidden>
+          <table class="task-table" id="task-table" aria-label="Roadmap tasks">
+            <thead>
+              <tr>
+                <th scope="col" class="col-num">#</th>
+                <th scope="col" class="col-main">Main Topic</th>
+                <th scope="col" class="col-sub">Sub Topic</th>
+                <th scope="col" class="col-desc">Description</th>
+                <th scope="col" class="col-status">Status</th>
+                <th scope="col" class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="task-tbody">
+              <!--
+                Rows are rendered by roadmap.js.
+                Row structure (for reference):
+                <tr data-id="123">
+                  <td class="col-num">1</td>
+                  <td class="col-main">Arrays</td>
+                  <td class="col-sub">Prefix Sum</td>
+                  <td class="col-desc">Learn prefix sums…</td>
+                  <td class="col-status">
+                    <span class="badge badge-pending">Pending</span>
+                  </td>
+                  <td class="col-actions">
+                    <div class="action-group">
+                      <button class="btn-icon" aria-label="Edit task">✏</button>
+                      <button class="btn-icon btn-icon--danger" aria-label="Delete task">🗑</button>
+                      <select class="status-dropdown" aria-label="Change status">
+                        <option value="Pending" selected>Pending</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards container (< 768px, rendered by roadmap.js) -->
+        <div class="mobile-cards" id="mobile-cards" hidden aria-label="Tasks as cards">
+          <!-- Cards rendered by roadmap.js on mobile -->
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination" id="pagination" hidden aria-label="Table pagination">
+          <button class="btn btn-ghost btn-sm" id="page-prev" aria-label="Go to previous page">
+            ← Prev
+          </button>
+          <span class="page-info" id="page-info" aria-live="polite">Page 1 of 1</span>
+          <button class="btn btn-ghost btn-sm" id="page-next" aria-label="Go to next page">
+            Next →
+          </button>
+        </nav>
+
+      </section>
+
+    </div>
+  </main>
+
+
+  <!-- =====================================================
+       Modal: Add / Edit Task
+       ===================================================== -->
+  <div
+    class="modal-overlay"
+    id="task-modal-overlay"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="task-modal-title"
+  >
+    <div class="modal" id="task-modal">
+
+      <div class="modal-header">
+        <h2 class="modal-title" id="task-modal-title">Add Task</h2>
+        <button class="modal-close" id="task-modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <form class="modal-form" id="task-form" novalidate>
+        <!-- Hidden: row ID for edit mode -->
+        <input type="hidden" id="task-id" name="id" value="" />
+
+        <!-- Main Topic -->
+        <div class="form-group">
+          <label for="field-main-topic" class="form-label">
+            Main Topic <span aria-label="required" aria-hidden="true">*</span>
+          </label>
+          <input
+            type="text"
+            id="field-main-topic"
+            name="main_topic"
+            class="form-input"
+            placeholder="e.g. Arrays"
+            required
+          />
+          <span class="form-error" id="err-main-topic" role="alert"></span>
+        </div>
+
+        <!-- Sub Topic -->
+        <div class="form-group">
+          <label for="field-sub-topic" class="form-label">
+            Sub Topic <span aria-label="required" aria-hidden="true">*</span>
+          </label>
+          <input
+            type="text"
+            id="field-sub-topic"
+            name="sub_topic"
+            class="form-input"
+            placeholder="e.g. Prefix Sum"
+            required
+          />
+          <span class="form-error" id="err-sub-topic" role="alert"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="field-description" class="form-label">Description</label>
+          <textarea
+            id="field-description"
+            name="description"
+            class="form-input form-textarea"
+            placeholder="What do you want to learn or complete?"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="field-status" class="form-label">Status</label>
+          <select
+            id="field-status"
+            name="status"
+            class="form-input form-select"
+          >
+            <option value="Pending">Pending</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <!--
+          ====================================================
+          Future scalability fields — hidden, easy to uncomment
+          ====================================================
+          <div class="form-group" hidden>
+            <label for="field-difficulty" class="form-label">Difficulty Level</label>
+            <select id="field-difficulty" name="difficulty" class="form-input form-select">
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+
+          <div class="form-group" hidden>
+            <label for="field-est-time" class="form-label">Estimated Time</label>
+            <input type="text" id="field-est-time" name="estimated_time" class="form-input" placeholder="e.g. 2 hours" />
+          </div>
+
+          <div class="form-group" hidden>
+            <label for="field-revision-date" class="form-label">Revision Date</label>
+            <input type="date" id="field-revision-date" name="revision_date" class="form-input" />
+          </div>
+
+          <div class="form-group" hidden>
+            <label for="field-notes" class="form-label">Notes</label>
+            <textarea id="field-notes" name="notes" class="form-input form-textarea" rows="2" placeholder="Personal notes…"></textarea>
+          </div>
+        -->
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="task-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="task-modal-submit">
+            <span id="modal-submit-text">Save Task</span>
+            <span id="modal-submit-spinner" hidden>
+              <span class="spinner" style="width:14px;height:14px;border-width:2px;" aria-hidden="true"></span>
+            </span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       Modal: Delete Confirm
+       ===================================================== -->
+  <div
+    class="modal-overlay"
+    id="delete-modal-overlay"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="delete-modal-title"
+  >
+    <div class="modal modal-sm" id="delete-modal">
+
+      <div class="modal-header">
+        <h2 class="modal-title" id="delete-modal-title">Delete Task</h2>
+        <button class="modal-close" id="delete-modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to delete this task? This action <strong>cannot be undone</strong>.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="delete-cancel">Cancel</button>
+        <button class="btn btn-danger" id="delete-confirm">
+          <span id="delete-btn-text">Delete</span>
+          <span id="delete-btn-spinner" hidden>
+            <span class="spinner" style="width:14px;height:14px;border-width:2px;" aria-hidden="true"></span>
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive" hidden></div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/roadmap.js"></script>
+</body>
+</html>

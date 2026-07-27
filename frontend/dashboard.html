@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard — Manage your personal technical roadmaps" />
+  <title>Dashboard — Roadmap Tracker</title>
+
+  <!-- Prevent theme flash -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dashboard-page">
+
+  <!-- =====================================================
+       Navbar
+       ===================================================== -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="navbar-inner">
+      <!-- Brand -->
+      <a href="dashboard.html" class="navbar-brand" aria-label="Roadmap Tracker — Go to dashboard">
+        <span class="brand-icon" aria-hidden="true">⬡</span>
+        <span class="brand-name">Roadmap Tracker</span>
+      </a>
+
+      <!-- Nav Actions -->
+      <nav class="navbar-actions" aria-label="Navbar actions">
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Toggle dark/light mode"
+          title="Toggle theme"
+        >
+          <span class="theme-icon" id="theme-icon" aria-hidden="true">☀</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="logout-btn" aria-label="Sign out">
+          Sign Out
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =====================================================
+       Main Content
+       ===================================================== -->
+  <main class="main-content" role="main" id="main-content">
+    <div class="content-inner">
+
+      <!-- Page Header -->
+      <section class="page-header" aria-labelledby="page-heading">
+        <h1 class="page-title" id="page-heading">My Roadmaps</h1>
+        <p class="page-subtitle">Track your progress across all learning paths</p>
+      </section>
+
+      <!-- Overall Stats Bar -->
+      <section class="stats-bar" id="stats-bar" aria-label="Overall progress statistics">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total-roadmaps">10</span>
+          <span class="stat-label">Roadmaps</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total-tasks">—</span>
+          <span class="stat-label">Total Tasks</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value stat-value--success" id="stat-completed">—</span>
+          <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value stat-value--warning" id="stat-ongoing">—</span>
+          <span class="stat-label">Ongoing</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value stat-value--muted" id="stat-pending">—</span>
+          <span class="stat-label">Pending</span>
+        </div>
+      </section>
+
+      <!-- Roadmap Cards -->
+      <section class="cards-section" aria-label="Roadmap cards">
+
+        <!-- Loading state (shown while fetching) -->
+        <div class="cards-loading loading-state" id="cards-loading" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Loading roadmaps...</p>
+        </div>
+
+        <!-- Cards grid (shown after load, populated by dashboard.js) -->
+        <div class="cards-grid" id="cards-grid" hidden>
+          <!--
+            Each card is dynamically rendered by dashboard.js.
+            Card structure (for reference):
+            <article class="roadmap-card" data-roadmap="dsa" tabindex="0" role="link" aria-label="Open DSA roadmap">
+              <div class="card-header">
+                <div class="card-icon" aria-hidden="true">...</div>
+                <div class="card-title-group">
+                  <h2 class="card-title">DSA</h2>
+                  <p class="card-last-updated">Updated Jul 26</p>
+                </div>
+              </div>
+              <div class="card-stats">
+                <span class="card-stat"><strong>18</strong> Completed</span>
+                <span class="card-stat"><strong>4</strong> Ongoing</span>
+                <span class="card-stat"><strong>3</strong> Pending</span>
+              </div>
+              <div class="card-progress" aria-label="72% complete">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 72%"></div>
+                </div>
+                <span class="progress-label">72%</span>
+              </div>
+            </article>
+          -->
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive" hidden></div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
