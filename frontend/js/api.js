@@ -27,8 +27,14 @@
    Configuration
    ============================================================ */
 
-/** Base URL for the Python backend. Change for production. */
-const BASE_URL = 'http://localhost:5000/api';
+/** Base URL for the Python backend.
+ *  ⚠️  When your backend is running locally and the frontend is on Vercel,
+ *      set this to your ngrok tunnel URL, e.g.:
+ *      'https://abcd-1234.ngrok-free.app/api/v1'
+ *  For local full-stack dev: 'http://localhost:8000/api/v1'
+ */
+// const BASE_URL = 'http://localhost:8000/api/v1';
+const BASE_URL = 'https://casually-override-childlike.ngrok-free.dev';
 
 /**
  * Set to true to use in-browser mock data instead of the real API.
