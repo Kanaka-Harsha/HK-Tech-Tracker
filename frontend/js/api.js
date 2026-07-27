@@ -34,7 +34,7 @@
  *  For local full-stack dev: 'http://localhost:8000/api/v1'
  */
 // const BASE_URL = 'http://localhost:8000/api/v1';
-const BASE_URL = 'https://casually-override-childlike.ngrok-free.dev';
+const BASE_URL = 'https://casually-override-childlike.ngrok-free.dev/api/v1';
 
 /**
  * Set to true to use in-browser mock data instead of the real API.
@@ -242,10 +242,10 @@ const Real = {
    * Body: { username, password }
    * Returns: { token: string }
    */
-  async login(username, password) {
+  async login(user_id, user_pass) {
     return request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ user_id, user_pass }),
     });
   },
 
