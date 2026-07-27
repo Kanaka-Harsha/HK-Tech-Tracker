@@ -192,6 +192,7 @@
   border-radius: 8px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   appearance: none;
+  -webkit-appearance: none;
 }
 
 .search-input::placeholder {
@@ -416,11 +417,20 @@
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.375rem center;
   transition: border-color 0.15s ease;
   max-width: 110px;
+}
+
+/* Theme-aware chevron */
+[data-theme="dark"] .status-dropdown,
+:root .status-dropdown {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239090a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+}
+
+[data-theme="light"] .status-dropdown {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2352527a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
 }
 
 .status-dropdown:focus {

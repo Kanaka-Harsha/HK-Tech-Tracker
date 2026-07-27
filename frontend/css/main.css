@@ -46,6 +46,7 @@
   --color-surface-hover:#242430;
   --color-border:       #2a2a35;
   --color-border-subtle:#1f1f28;
+  --color-border-input: #333342;
 
   /* Text */
   --color-text-primary:  #f0f0f5;
@@ -95,6 +96,7 @@
   --color-surface-hover:#eeeef8;
   --color-border:       #e2e2ee;
   --color-border-subtle:#ebebf5;
+  --color-border-input: #d4d4e8;
 
   /* Text */
   --color-text-primary:  #111118;
@@ -135,11 +137,14 @@
 }
 
 /* --- 2c. Roadmap Theme Color Overrides ---
-   Applied via data-roadmap attribute on <body> or via JS
-   Each overrides --color-accent, --color-accent-hover,
-   --color-accent-subtle, --color-accent-border
+   Applied via [data-roadmap] on <body> (roadmap page)
+   or on individual <article> cards (dashboard page).
+   Each overrides --color-accent, accent-hover,
+   accent-subtle, accent-border, and roadmap-gradient.
    --------------------------------------------------------- */
 
+/* Roadmap page body — full accent override */
+body[data-roadmap="dsa"],
 [data-roadmap="dsa"] {
   --color-accent:        #7c3aed;
   --color-accent-hover:  #6d28d9;
@@ -148,6 +153,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #7c3aed22, #6d28d911);
 }
 
+body[data-roadmap="terraform"],
 [data-roadmap="terraform"] {
   --color-accent:        #2563eb;
   --color-accent-hover:  #1d4ed8;
@@ -156,6 +162,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #2563eb22, #1d4ed811);
 }
 
+body[data-roadmap="linux"],
 [data-roadmap="linux"] {
   --color-accent:        #16a34a;
   --color-accent-hover:  #15803d;
@@ -164,6 +171,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #16a34a22, #15803d11);
 }
 
+body[data-roadmap="dbms"],
 [data-roadmap="dbms"] {
   --color-accent:        #0891b2;
   --color-accent-hover:  #0e7490;
@@ -172,6 +180,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #0891b222, #0e749011);
 }
 
+body[data-roadmap="os"],
 [data-roadmap="os"] {
   --color-accent:        #dc2626;
   --color-accent-hover:  #b91c1c;
@@ -180,6 +189,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #dc262622, #b91c1c11);
 }
 
+body[data-roadmap="oops"],
 [data-roadmap="oops"] {
   --color-accent:        #db2777;
   --color-accent-hover:  #be185d;
@@ -188,6 +198,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #db277722, #be185d11);
 }
 
+body[data-roadmap="cn"],
 [data-roadmap="cn"] {
   --color-accent:        #4f46e5;
   --color-accent-hover:  #4338ca;
@@ -196,6 +207,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #4f46e522, #4338ca11);
 }
 
+body[data-roadmap="cloud"],
 [data-roadmap="cloud"] {
   --color-accent:        #0ea5e9;
   --color-accent-hover:  #0284c7;
@@ -204,6 +216,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #0ea5e922, #0284c711);
 }
 
+body[data-roadmap="aws"],
 [data-roadmap="aws"] {
   --color-accent:        #ea580c;
   --color-accent-hover:  #c2410c;
@@ -212,6 +225,7 @@
   --roadmap-gradient:    linear-gradient(135deg, #ea580c22, #c2410c11);
 }
 
+body[data-roadmap="systemdesign"],
 [data-roadmap="systemdesign"] {
   --color-accent:        #0d9488;
   --color-accent-hover:  #0f766e;
@@ -614,11 +628,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Select */
 .form-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  appearance: none;
+  -webkit-appearance: none;
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   padding-right: 2.25rem;
   cursor: pointer;
+}
+
+/* Dark theme chevron (white-ish) */
+[data-theme="dark"] .form-select,
+:root .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239090a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+}
+
+/* Light theme chevron (dark-ish) */
+[data-theme="light"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2352527a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
 }
 
 /* Error state */
@@ -1004,4 +1030,51 @@ h1, h2, h3, h4, h5, h6 {
   .navbar-inner {
     padding: 0 1rem;
   }
+}
+
+
+/* ============================================================
+   15. Focus Visible Utility (accessibility)
+   ============================================================ */
+
+/* Remove default outline only when using mouse; keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   16. Selection Color
+   ============================================================ */
+
+::selection {
+  background: var(--color-accent-subtle);
+  color: var(--color-text-primary);
+}
+
+
+/* ============================================================
+   17. Smooth theme transition on all color properties
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+/* Opt-out transitions for elements where it looks bad */
+.progress-bar-fill,
+.spinner,
+.modal,
+.modal-overlay,
+.toast {
+  transition: none;
 }
