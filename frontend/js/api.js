@@ -34,7 +34,7 @@ const BASE_URL = 'http://localhost:5000/api';
  * Set to true to use in-browser mock data instead of the real API.
  * Useful for UI testing before the backend is ready.
  */
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 
 /* ============================================================
    Auth Helper
