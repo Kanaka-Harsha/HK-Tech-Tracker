@@ -911,6 +911,10 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.9rem;
 }
 
+.loading-state[hidden] {
+  display: none !important;
+}
+
 /* Empty state */
 .empty-state {
   display: flex;
@@ -920,6 +924,10 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.5rem;
   padding: 4rem 2rem;
   text-align: center;
+}
+
+.empty-state[hidden] {
+  display: none !important;
 }
 
 .empty-icon {
