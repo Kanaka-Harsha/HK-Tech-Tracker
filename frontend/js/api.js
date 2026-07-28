@@ -289,7 +289,7 @@ const Real = {
    * Body: Partial<Row>
    * Returns: Row
    */
-  async updateRow(roadmapId, id, patch) {
+  async updateRow(roadmapId, id, patch) { // API Created
     return request(`/roadmap/${encodeURIComponent(roadmapId)}/${encodeURIComponent(id)}`, {
       method: 'PUT',
       body: JSON.stringify(patch),
@@ -301,7 +301,7 @@ const Real = {
    * DELETE /roadmap/:roadmapId/:id
    * Returns: null
    */
-  async deleteRow(roadmapId, id) {
+  async deleteRow(roadmapId, id) { // API Created
     return request(`/roadmap/${encodeURIComponent(roadmapId)}/${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
@@ -313,7 +313,7 @@ const Real = {
    * GET /roadmap/:roadmapId/progress
    * Returns: { total, completed, ongoing, pending, lastUpdated }
    */
-  async getRoadmapProgress(roadmapId) {
+  async getRoadmapProgress(roadmapId) { // API Created
     return request(`/roadmap/${encodeURIComponent(roadmapId)}/progress`);
   },
 };
