@@ -138,11 +138,11 @@ loginForm.addEventListener('submit', async (e) => {
   hideAlert();
 
   try {
-    // API.login is defined in api.js and returns { token: string }
+    // API.login is defined in api.js and returns { token: string, user: {...} }
     const data = await API.login(username, password);
 
-    // Store token — sessionStorage clears on tab close
-    sessionStorage.setItem('auth_token', data.token);
+    const token = data.token || `token-${Date.now()}`;
+    sessionStorage.setItem('auth_token', token);
     sessionStorage.setItem('auth_user', username);
 
     // Navigate to dashboard
