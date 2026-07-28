@@ -804,7 +804,7 @@ async function init() {
   // Set page header metadata
   setupPageHeader(roadmapId);
 
-  // Show loading state
+  // Show loading state initially
   tableLoading.hidden   = false;
   tableEmpty.hidden     = true;
   tableNoResults.hidden = true;
@@ -815,6 +815,9 @@ async function init() {
   try {
     const rows = await API.getRows(roadmapId);
     state.allRows = rows || [];
+
+    // Hide loading spinner now that fetch is complete
+    tableLoading.hidden = true;
 
     // Set last updated from most recent row if available
     if (rows.length > 0 && rows[0].updated_at) {

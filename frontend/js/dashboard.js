@@ -198,13 +198,13 @@ async function loadDashboard() {
     renderCards(items);
 
   } catch (err) {
-    // If overall fetch fails, still render cards with empty progress
+    cardsLoading.hidden = true;
+    showToast('Failed to load roadmap data from backend.', 'error');
     const fallback = allRoadmaps.map((roadmap) => ({
       roadmap,
       progress: { total: 0, completed: 0, ongoing: 0, pending: 0, lastUpdated: null },
     }));
     renderCards(fallback);
-    showToast('Could not connect to backend. Showing empty progress.', 'error');
   }
 }
 
