@@ -52,7 +52,10 @@ const MOCK_MODE = false;
  */
 function authHeaders() {
   const token = sessionStorage.getItem('auth_token');
-  const headers = { 'Content-Type': 'application/json' };
+  const headers = { 
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'  // Bypasses ngrok's interstitial warning page
+  };
   if (token) headers['Authorization'] = `Bearer ${token}`;
   return headers;
 }
@@ -242,7 +245,7 @@ const Real = {
    * Body: { username, password }
    * Returns: { token: string }
    */
-  async login(user_id, user_pass) {
+  async login(user_id, user_pass) { // API CREATED
     return request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ user_id, user_pass }),
@@ -254,7 +257,7 @@ const Real = {
    * POST /auth/logout
    * Returns: null
    */
-  async logout() {
+  async logout() { // API CREATED
     return request('/auth/logout', { method: 'POST' });
   },
 
@@ -263,7 +266,7 @@ const Real = {
    * GET /roadmap/:roadmapId
    * Returns: Array<Row>
    */
-  async getRows(roadmapId) {
+  async getRows(roadmapId) { // API CREATED
     return request(`/roadmap/${encodeURIComponent(roadmapId)}`);
   },
 
@@ -272,8 +275,8 @@ const Real = {
    * POST /roadmap/:roadmapId
    * Body: { main_topic, sub_topic, description, status }
    * Returns: Row
-   */
-  async addRow(roadmapId, payload) {
+   */ 
+  async addRow(roadmapId, payload) { // API CREATED
     return request(`/roadmap/${encodeURIComponent(roadmapId)}`, {
       method: 'POST',
       body: JSON.stringify(payload),
