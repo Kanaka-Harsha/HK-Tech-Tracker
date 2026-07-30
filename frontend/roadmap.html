@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +24,7 @@
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/roadmap.css" />
 </head>
+
 <body class="roadmap-page">
 
   <!-- =====================================================
@@ -43,12 +45,7 @@
 
       <!-- Right: actions -->
       <nav class="navbar-actions" aria-label="Navbar actions">
-        <button
-          class="theme-toggle"
-          id="theme-toggle"
-          aria-label="Toggle dark/light mode"
-          title="Toggle theme"
-        >
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
           <span class="theme-icon" id="theme-icon" aria-hidden="true">☀</span>
         </button>
         <button class="btn btn-ghost btn-sm" id="logout-btn" aria-label="Sign out">
@@ -97,15 +94,8 @@
           </div>
 
           <div class="progress-bar-row">
-            <div
-              class="progress-bar-track"
-              role="progressbar"
-              aria-valuenow="0"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-label="Completion percentage"
-              id="progress-bar-track"
-            >
+            <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+              aria-label="Completion percentage" id="progress-bar-track">
               <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%"></div>
             </div>
             <span class="progress-bar-label" id="progress-percent">0%</span>
@@ -118,7 +108,8 @@
            Roadmap Notes Section
            ----------------------------------------------- -->
       <section class="roadmap-notes-card" id="roadmap-notes-card">
-        <div class="notes-card-header" id="notes-card-header" role="button" aria-expanded="true" aria-controls="notes-card-body" tabindex="0">
+        <div class="notes-card-header" id="notes-card-header" role="button" aria-expanded="true"
+          aria-controls="notes-card-body" tabindex="0">
           <div class="notes-header-title">
             <span class="notes-icon" aria-hidden="true">📝</span>
             <h3>Roadmap Notes</h3>
@@ -128,7 +119,7 @@
           </button>
         </div>
         <div class="notes-card-body" id="notes-card-body">
-          
+
           <!-- Read-Only View Mode -->
           <div class="notes-view-mode" id="notes-view-mode">
             <h4 class="notes-display-title" id="notes-display-title"></h4>
@@ -139,18 +130,22 @@
               </button>
             </div>
           </div>
-          
+
           <!-- Edit Mode (hidden initially) -->
           <div class="notes-edit-mode" id="notes-edit-mode" hidden>
             <div class="form-group">
               <label for="notes-input-title" class="form-label">Note Title</label>
-              <input type="text" id="notes-input-title" class="form-input" placeholder="e.g. Focus Areas, Useful Resources">
+              <input type="text" id="notes-input-title" class="form-input"
+                placeholder="e.g. Focus Areas, Useful Resources">
             </div>
             <div class="form-group" style="margin-top: 1rem;">
               <label for="notes-input-content" class="form-label">Notes</label>
-              <textarea id="notes-input-content" class="form-input form-textarea" placeholder="Write details about your progress, links to tutorials, or algorithm summaries..." rows="5"></textarea>
+              <textarea id="notes-input-content" class="form-input form-textarea"
+                placeholder="Write details about your progress, links to tutorials, or algorithm summaries..."
+                rows="5"></textarea>
             </div>
-            <div class="notes-actions" style="margin-top: 1.25rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
+            <div class="notes-actions"
+              style="margin-top: 1.25rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
               <button class="btn btn-ghost btn-sm" id="cancel-notes-btn">Cancel</button>
               <button class="btn btn-primary btn-sm" id="save-notes-btn">
                 <span id="save-notes-text">Save Notes</span>
@@ -174,26 +169,16 @@
           <div class="search-wrapper">
             <span class="search-icon" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10.5 10.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5" />
+                <path d="M10.5 10.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               </svg>
             </span>
-            <input
-              type="search"
-              class="search-input"
-              id="search-input"
-              placeholder="Search topics…"
-              aria-label="Search tasks by topic or description"
-              autocomplete="off"
-            />
+            <input type="search" class="search-input" id="search-input" placeholder="Search topics…"
+              aria-label="Search tasks by topic or description" autocomplete="off" />
           </div>
 
           <!-- Status filter -->
-          <select
-            class="filter-select form-select"
-            id="filter-status"
-            aria-label="Filter by status"
-          >
+          <select class="filter-select form-select" id="filter-status" aria-label="Filter by status">
             <option value="all">All Status</option>
             <option value="Pending">Pending</option>
             <option value="Ongoing">Ongoing</option>
@@ -201,11 +186,7 @@
           </select>
 
           <!-- Sort -->
-          <select
-            class="filter-select form-select"
-            id="sort-by"
-            aria-label="Sort tasks"
-          >
+          <select class="filter-select form-select" id="sort-by" aria-label="Sort tasks">
             <option value="default">Default Order</option>
             <option value="main_topic">Main Topic A–Z</option>
             <option value="sub_topic">Sub Topic A–Z</option>
@@ -288,11 +269,11 @@
           </table>
         </div>
 
-        <!-- Mobile cards container (< 768px, rendered by roadmap.js) 
+        <!-- Mobile cards container (< 768px, rendered by roadmap.js)  -->
         <div class="mobile-cards" id="mobile-cards" hidden aria-label="Tasks as cards">
-           -- Cards rendered by roadmap.js on mobile --
+          <!-- Cards rendered by roadmap.js on mobile -->
         </div>
-        -->
+
 
         <!-- Pagination -->
         <nav class="pagination" id="pagination" hidden aria-label="Table pagination">
@@ -314,14 +295,8 @@
   <!-- =====================================================
        Modal: Add / Edit Task
        ===================================================== -->
-  <div
-    class="modal-overlay"
-    id="task-modal-overlay"
-    hidden
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="task-modal-title"
-  >
+  <div class="modal-overlay" id="task-modal-overlay" hidden role="dialog" aria-modal="true"
+    aria-labelledby="task-modal-title">
     <div class="modal" id="task-modal">
 
       <div class="modal-header">
@@ -338,14 +313,8 @@
           <label for="field-main-topic" class="form-label">
             Main Topic <span aria-label="required" aria-hidden="true">*</span>
           </label>
-          <input
-            type="text"
-            id="field-main-topic"
-            name="main_topic"
-            class="form-input"
-            placeholder="e.g. Arrays"
-            required
-          />
+          <input type="text" id="field-main-topic" name="main_topic" class="form-input" placeholder="e.g. Arrays"
+            required />
           <span class="form-error" id="err-main-topic" role="alert"></span>
         </div>
 
@@ -354,37 +323,22 @@
           <label for="field-sub-topic" class="form-label">
             Sub Topic <span aria-label="required" aria-hidden="true">*</span>
           </label>
-          <input
-            type="text"
-            id="field-sub-topic"
-            name="sub_topic"
-            class="form-input"
-            placeholder="e.g. Prefix Sum"
-            required
-          />
+          <input type="text" id="field-sub-topic" name="sub_topic" class="form-input" placeholder="e.g. Prefix Sum"
+            required />
           <span class="form-error" id="err-sub-topic" role="alert"></span>
         </div>
 
         <!-- Description -->
         <div class="form-group">
           <label for="field-description" class="form-label">Description</label>
-          <textarea
-            id="field-description"
-            name="description"
-            class="form-input form-textarea"
-            placeholder="What do you want to learn or complete?"
-            rows="3"
-          ></textarea>
+          <textarea id="field-description" name="description" class="form-input form-textarea"
+            placeholder="What do you want to learn or complete?" rows="3"></textarea>
         </div>
 
         <!-- Status -->
         <div class="form-group">
           <label for="field-status" class="form-label">Status</label>
-          <select
-            id="field-status"
-            name="status"
-            class="form-input form-select"
-          >
+          <select id="field-status" name="status" class="form-input form-select">
             <option value="Pending">Pending</option>
             <option value="Ongoing">Ongoing</option>
             <option value="Completed">Completed</option>
@@ -438,14 +392,8 @@
   <!-- =====================================================
        Modal: Delete Confirm
        ===================================================== -->
-  <div
-    class="modal-overlay"
-    id="delete-modal-overlay"
-    hidden
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="delete-modal-title"
-  >
+  <div class="modal-overlay" id="delete-modal-overlay" hidden role="dialog" aria-modal="true"
+    aria-labelledby="delete-modal-title">
     <div class="modal modal-sm" id="delete-modal">
 
       <div class="modal-header">
@@ -479,4 +427,5 @@
   <script src="js/api.js"></script>
   <script src="js/roadmap.js"></script>
 </body>
+
 </html>
