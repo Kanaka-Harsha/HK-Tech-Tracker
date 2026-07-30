@@ -35,3 +35,24 @@ CREATE TABLE tasks (
 );
 
 SELECT * from tasks;
+
+CREATE TABLE notes (
+    roadmap_id VARCHAR(100) PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    notes TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_roadmap
+        FOREIGN KEY (roadmap_id)
+        REFERENCES roadmaps(name)
+        ON DELETE CASCADE
+);
+
+INSERT INTO notes (roadmap_id, title, notes)
+VALUES (
+    'DSA',
+    'Test Note',
+    'This is a demo note, nothing is important here.'
+);
+
+SELECT * from notes;
