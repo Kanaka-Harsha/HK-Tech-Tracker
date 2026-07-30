@@ -40,14 +40,14 @@ const STATUS_VALUES = ['Pending', 'Ongoing', 'Completed'];
    State
    ============================================================ */
 let state = {
-  roadmapId:    '',        // e.g. 'dsa'
-  allRows:      [],        // full dataset from API
+  roadmapId: '',        // e.g. 'dsa'
+  allRows: [],        // full dataset from API
   filteredRows: [],        // after search + filter + sort
-  currentPage:  1,
-  totalPages:   1,
-  sortBy:       'default',
+  currentPage: 1,
+  totalPages: 1,
+  sortBy: 'default',
   filterStatus: 'all',
-  searchQuery:  '',
+  searchQuery: '',
   pendingDeleteId: null,   // row ID awaiting delete confirm
   notes: {
     title: '',
@@ -60,83 +60,83 @@ let state = {
    ============================================================ */
 // Navbar
 const navRoadmapName = document.getElementById('navbar-roadmap-name');
-const logoutBtn      = document.getElementById('logout-btn');
+const logoutBtn = document.getElementById('logout-btn');
 
 // Header
-const roadmapIcon    = document.getElementById('roadmap-icon');
-const roadmapTitle   = document.getElementById('roadmap-title');
-const roadmapMeta    = document.getElementById('roadmap-meta');
-const metaTotal      = document.getElementById('meta-total');
-const metaUpdated    = document.getElementById('meta-updated');
+const roadmapIcon = document.getElementById('roadmap-icon');
+const roadmapTitle = document.getElementById('roadmap-title');
+const roadmapMeta = document.getElementById('roadmap-meta');
+const metaTotal = document.getElementById('meta-total');
+const metaUpdated = document.getElementById('meta-updated');
 
 // Progress
-const countCompleted   = document.getElementById('count-completed');
-const countOngoing     = document.getElementById('count-ongoing');
-const countPending     = document.getElementById('count-pending');
-const progressBarFill  = document.getElementById('progress-bar-fill');
+const countCompleted = document.getElementById('count-completed');
+const countOngoing = document.getElementById('count-ongoing');
+const countPending = document.getElementById('count-pending');
+const progressBarFill = document.getElementById('progress-bar-fill');
 const progressBarTrack = document.getElementById('progress-bar-track');
-const progressPercent  = document.getElementById('progress-percent');
+const progressPercent = document.getElementById('progress-percent');
 
 // Toolbar
-const searchInput  = document.getElementById('search-input');
+const searchInput = document.getElementById('search-input');
 const filterStatus = document.getElementById('filter-status');
-const sortBy       = document.getElementById('sort-by');
-const addTaskBtn   = document.getElementById('add-task-btn');
+const sortBy = document.getElementById('sort-by');
+const addTaskBtn = document.getElementById('add-task-btn');
 
 // Table / states
-const tableLoading   = document.getElementById('table-loading');
-const tableEmpty     = document.getElementById('table-empty');
+const tableLoading = document.getElementById('table-loading');
+const tableEmpty = document.getElementById('table-empty');
 const tableNoResults = document.getElementById('table-no-results');
-const tableWrapper   = document.getElementById('table-wrapper');
-const taskTbody      = document.getElementById('task-tbody');
-const mobileCards    = document.getElementById('mobile-cards');
+const tableWrapper = document.getElementById('table-wrapper');
+const taskTbody = document.getElementById('task-tbody');
+const mobileCards = document.getElementById('mobile-cards');
 
 // Pagination
 const pagination = document.getElementById('pagination');
-const pagePrev   = document.getElementById('page-prev');
-const pageNext   = document.getElementById('page-next');
-const pageInfo   = document.getElementById('page-info');
+const pagePrev = document.getElementById('page-prev');
+const pageNext = document.getElementById('page-next');
+const pageInfo = document.getElementById('page-info');
 
 // Add/Edit Modal
 const taskModalOverlay = document.getElementById('task-modal-overlay');
-const taskModalTitle   = document.getElementById('task-modal-title');
-const taskModalClose   = document.getElementById('task-modal-close');
-const taskModalCancel  = document.getElementById('task-modal-cancel');
-const taskForm         = document.getElementById('task-form');
-const taskId           = document.getElementById('task-id');
-const fieldMainTopic   = document.getElementById('field-main-topic');
-const fieldSubTopic    = document.getElementById('field-sub-topic');
+const taskModalTitle = document.getElementById('task-modal-title');
+const taskModalClose = document.getElementById('task-modal-close');
+const taskModalCancel = document.getElementById('task-modal-cancel');
+const taskForm = document.getElementById('task-form');
+const taskId = document.getElementById('task-id');
+const fieldMainTopic = document.getElementById('field-main-topic');
+const fieldSubTopic = document.getElementById('field-sub-topic');
 const fieldDescription = document.getElementById('field-description');
-const fieldStatus      = document.getElementById('field-status');
-const modalSubmitText  = document.getElementById('modal-submit-text');
+const fieldStatus = document.getElementById('field-status');
+const modalSubmitText = document.getElementById('modal-submit-text');
 const modalSubmitSpinner = document.getElementById('modal-submit-spinner');
-const errMainTopic     = document.getElementById('err-main-topic');
-const errSubTopic      = document.getElementById('err-sub-topic');
+const errMainTopic = document.getElementById('err-main-topic');
+const errSubTopic = document.getElementById('err-sub-topic');
 
 // Delete Modal
 const deleteModalOverlay = document.getElementById('delete-modal-overlay');
-const deleteModalClose   = document.getElementById('delete-modal-close');
-const deleteCancel       = document.getElementById('delete-cancel');
-const deleteConfirm      = document.getElementById('delete-confirm');
-const deleteBtnText      = document.getElementById('delete-btn-text');
-const deleteBtnSpinner   = document.getElementById('delete-btn-spinner');
+const deleteModalClose = document.getElementById('delete-modal-close');
+const deleteCancel = document.getElementById('delete-cancel');
+const deleteConfirm = document.getElementById('delete-confirm');
+const deleteBtnText = document.getElementById('delete-btn-text');
+const deleteBtnSpinner = document.getElementById('delete-btn-spinner');
 
 // Notes Section
-const notesCard          = document.getElementById('roadmap-notes-card');
-const notesCardHeader    = document.getElementById('notes-card-header');
-const notesChevronIcon   = document.getElementById('notes-chevron-icon');
-const notesCardBody      = document.getElementById('notes-card-body');
-const notesViewMode      = document.getElementById('notes-view-mode');
-const notesDisplayTitle  = document.getElementById('notes-display-title');
-const notesDisplayContent= document.getElementById('notes-display-content');
-const editNotesBtn       = document.getElementById('edit-notes-btn');
-const notesEditMode      = document.getElementById('notes-edit-mode');
-const notesInputTitle    = document.getElementById('notes-input-title');
-const notesInputContent  = document.getElementById('notes-input-content');
-const cancelNotesBtn     = document.getElementById('cancel-notes-btn');
-const saveNotesBtn       = document.getElementById('save-notes-btn');
-const saveNotesText      = document.getElementById('save-notes-text');
-const saveNotesSpinner   = document.getElementById('save-notes-spinner');
+const notesCard = document.getElementById('roadmap-notes-card');
+const notesCardHeader = document.getElementById('notes-card-header');
+const notesChevronIcon = document.getElementById('notes-chevron-icon');
+const notesCardBody = document.getElementById('notes-card-body');
+const notesViewMode = document.getElementById('notes-view-mode');
+const notesDisplayTitle = document.getElementById('notes-display-title');
+const notesDisplayContent = document.getElementById('notes-display-content');
+const editNotesBtn = document.getElementById('edit-notes-btn');
+const notesEditMode = document.getElementById('notes-edit-mode');
+const notesInputTitle = document.getElementById('notes-input-title');
+const notesInputContent = document.getElementById('notes-input-content');
+const cancelNotesBtn = document.getElementById('cancel-notes-btn');
+const saveNotesBtn = document.getElementById('save-notes-btn');
+const saveNotesText = document.getElementById('save-notes-text');
+const saveNotesSpinner = document.getElementById('save-notes-spinner');
 
 /* ============================================================
    Toast Utility
@@ -198,16 +198,16 @@ function isMobile() {
  */
 function updateProgress() {
   const rows = state.allRows;
-  const total     = rows.length;
+  const total = rows.length;
   const completed = rows.filter(r => r.status === 'Completed').length;
-  const ongoing   = rows.filter(r => r.status === 'Ongoing').length;
-  const pending   = rows.filter(r => r.status === 'Pending').length;
-  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const ongoing = rows.filter(r => r.status === 'Ongoing').length;
+  const pending = rows.filter(r => r.status === 'Pending').length;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   countCompleted.textContent = completed;
-  countOngoing.textContent   = ongoing;
-  countPending.textContent   = pending;
-  metaTotal.textContent      = total;
+  countOngoing.textContent = ongoing;
+  countPending.textContent = pending;
+  metaTotal.textContent = total;
 
   progressBarFill.style.width = `${pct}%`;
   progressBarTrack.setAttribute('aria-valuenow', pct);
@@ -234,9 +234,9 @@ function applyFilters() {
   if (state.searchQuery) {
     const q = state.searchQuery.toLowerCase();
     rows = rows.filter(r =>
-      (r.main_topic   || '').toLowerCase().includes(q) ||
-      (r.sub_topic    || '').toLowerCase().includes(q) ||
-      (r.description  || '').toLowerCase().includes(q)
+      (r.main_topic || '').toLowerCase().includes(q) ||
+      (r.sub_topic || '').toLowerCase().includes(q) ||
+      (r.description || '').toLowerCase().includes(q)
     );
   }
 
@@ -252,8 +252,8 @@ function applyFilters() {
   // 'default' = insertion order (no sort)
 
   state.filteredRows = rows;
-  state.currentPage  = 1;
-  state.totalPages   = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
+  state.currentPage = 1;
+  state.totalPages = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
 
   renderView();
 }
@@ -388,52 +388,64 @@ function renderView() {
   const rows = state.filteredRows;
   const total = state.allRows.length;
 
-  // --- Show correct state ---
-  tableLoading.hidden   = true;
+  tableLoading.hidden = true;
 
   if (total === 0) {
-    // No tasks at all
-    tableEmpty.hidden     = false;
+    tableEmpty.hidden = false;
     tableNoResults.hidden = true;
-    tableWrapper.hidden   = true;
-    mobileCards.hidden    = true;
-    pagination.hidden     = true;
+    tableWrapper.hidden = true;
+    mobileCards.hidden = true;
+    pagination.hidden = true;
     return;
   }
 
   if (rows.length === 0) {
-    // Tasks exist but none match filter/search
-    tableEmpty.hidden     = true;
+    tableEmpty.hidden = true;
     tableNoResults.hidden = false;
-    tableWrapper.hidden   = true;
-    mobileCards.hidden    = true;
-    pagination.hidden     = true;
+    tableWrapper.hidden = true;
+    mobileCards.hidden = true;
+    pagination.hidden = true;
     return;
   }
 
-  // --- Paginate ---
   const start = (state.currentPage - 1) * ROWS_PER_PAGE;
-  const end   = start + ROWS_PER_PAGE;
+  const end = start + ROWS_PER_PAGE;
   const pageRows = rows.slice(start, end);
 
-  tableEmpty.hidden     = true;
+  tableEmpty.hidden = true;
   tableNoResults.hidden = true;
 
-  // --- Render Desktop Table ---
-  taskTbody.innerHTML = '';
-  pageRows.forEach((row, i) => {
-    taskTbody.appendChild(buildTableRow(row, start + i + 1));
-  });
-  tableWrapper.hidden = false;
+  if (isMobile()) {
 
-  // --- Render Mobile Cards ---
-  mobileCards.innerHTML = '';
-  pageRows.forEach((row, i) => {
-    mobileCards.appendChild(buildMobileCard(row, start + i + 1));
-  });
-  mobileCards.hidden = false;
+    // Clear desktop
+    taskTbody.innerHTML = '';
 
-  // --- Pagination ---
+    // Render mobile
+    mobileCards.innerHTML = '';
+
+    pageRows.forEach((row, i) => {
+      mobileCards.appendChild(buildMobileCard(row, start + i + 1));
+    });
+
+    tableWrapper.hidden = true;
+    mobileCards.hidden = false;
+
+  } else {
+
+    // Clear mobile
+    mobileCards.innerHTML = '';
+
+    // Render desktop
+    taskTbody.innerHTML = '';
+
+    pageRows.forEach((row, i) => {
+      taskTbody.appendChild(buildTableRow(row, start + i + 1));
+    });
+
+    tableWrapper.hidden = false;
+    mobileCards.hidden = true;
+  }
+
   updatePagination();
 }
 
@@ -482,9 +494,9 @@ function handleActionClick(e) {
   if (!btn) return;
 
   const action = btn.dataset.action;
-  const id     = btn.dataset.id;
+  const id = btn.dataset.id;
 
-  if (action === 'edit')   openEditModal(id);
+  if (action === 'edit') openEditModal(id);
   if (action === 'delete') openDeleteModal(id);
 }
 
@@ -492,7 +504,7 @@ async function handleStatusChange(e) {
   const select = e.target.closest('select[data-action="status"]');
   if (!select) return;
 
-  const id        = select.dataset.id;
+  const id = select.dataset.id;
   const newStatus = select.value;
   const oldStatus = select.dataset.status;
 
@@ -520,7 +532,7 @@ async function handleStatusChange(e) {
 }
 
 // Attach to both table tbody and mobile cards via document delegation
-document.addEventListener('click',  handleActionClick);
+document.addEventListener('click', handleActionClick);
 document.addEventListener('change', handleStatusChange);
 
 /* ============================================================
@@ -532,7 +544,7 @@ function resetModalForm() {
   taskForm.reset();
   taskId.value = '';
   errMainTopic.textContent = '';
-  errSubTopic.textContent  = '';
+  errSubTopic.textContent = '';
   fieldMainTopic.classList.remove('is-error');
   fieldSubTopic.classList.remove('is-error');
   taskModalTitle.textContent = 'Add Task';
@@ -545,13 +557,13 @@ function openEditModal(id) {
   if (!row) return;
 
   resetModalForm();
-  taskModalTitle.textContent  = 'Edit Task';
+  taskModalTitle.textContent = 'Edit Task';
   modalSubmitText.textContent = 'Update Task';
-  taskId.value                = row.id;
-  fieldMainTopic.value        = row.main_topic   || '';
-  fieldSubTopic.value         = row.sub_topic    || '';
-  fieldDescription.value      = row.description  || '';
-  fieldStatus.value           = row.status       || 'Pending';
+  taskId.value = row.id;
+  fieldMainTopic.value = row.main_topic || '';
+  fieldSubTopic.value = row.sub_topic || '';
+  fieldDescription.value = row.description || '';
+  fieldStatus.value = row.status || 'Pending';
 
   openModal(taskModalOverlay);
   fieldMainTopic.focus();
@@ -565,7 +577,7 @@ addTaskBtn?.addEventListener('click', () => {
 });
 
 /** Modal close / cancel */
-taskModalClose?.addEventListener('click',  () => closeModal(taskModalOverlay));
+taskModalClose?.addEventListener('click', () => closeModal(taskModalOverlay));
 taskModalCancel?.addEventListener('click', () => closeModal(taskModalOverlay));
 
 /** Form validation */
@@ -573,7 +585,7 @@ function validateTaskForm() {
   let valid = true;
 
   errMainTopic.textContent = '';
-  errSubTopic.textContent  = '';
+  errSubTopic.textContent = '';
   fieldMainTopic.classList.remove('is-error');
   fieldSubTopic.classList.remove('is-error');
 
@@ -599,14 +611,14 @@ taskForm?.addEventListener('submit', async (e) => {
 
   const isEdit = Boolean(taskId.value);
   const payload = {
-    main_topic:  fieldMainTopic.value.trim(),
-    sub_topic:   fieldSubTopic.value.trim(),
+    main_topic: fieldMainTopic.value.trim(),
+    sub_topic: fieldSubTopic.value.trim(),
     description: fieldDescription.value.trim(),
-    status:      fieldStatus.value,
+    status: fieldStatus.value,
   };
 
   // Show spinner
-  modalSubmitText.hidden   = true;
+  modalSubmitText.hidden = true;
   modalSubmitSpinner.hidden = false;
   document.getElementById('task-modal-submit').disabled = true;
 
@@ -639,7 +651,7 @@ taskForm?.addEventListener('submit', async (e) => {
   } catch (err) {
     showToast(err.message || 'Failed to save task. Please try again.', 'error');
   } finally {
-    modalSubmitText.hidden    = false;
+    modalSubmitText.hidden = false;
     modalSubmitSpinner.hidden = true;
     document.getElementById('task-modal-submit').disabled = false;
   }
@@ -669,9 +681,9 @@ deleteConfirm?.addEventListener('click', async () => {
   const id = state.pendingDeleteId;
   if (!id) return;
 
-  deleteBtnText.hidden    = true;
+  deleteBtnText.hidden = true;
   deleteBtnSpinner.hidden = false;
-  deleteConfirm.disabled  = true;
+  deleteConfirm.disabled = true;
 
   try {
     await API.deleteRow(state.roadmapId, id);
@@ -688,9 +700,9 @@ deleteConfirm?.addEventListener('click', async () => {
   } catch (err) {
     showToast(err.message || 'Failed to delete task. Please try again.', 'error');
   } finally {
-    deleteBtnText.hidden    = false;
+    deleteBtnText.hidden = false;
     deleteBtnSpinner.hidden = true;
-    deleteConfirm.disabled  = false;
+    deleteConfirm.disabled = false;
   }
 });
 
@@ -714,7 +726,7 @@ function closeModal(overlay) {
 function trapEscape(e) {
   if (e.key === 'Escape') {
     // Close whichever modal is open
-    if (!taskModalOverlay.hidden)   closeModal(taskModalOverlay);
+    if (!taskModalOverlay.hidden) closeModal(taskModalOverlay);
     if (!deleteModalOverlay.hidden) closeModal(deleteModalOverlay);
   }
 }
@@ -794,14 +806,14 @@ function setupPageHeader(roadmapId) {
   const meta = Theme.getRoadmapMeta(roadmapId);
   if (!meta) {
     navRoadmapName.textContent = 'Unknown Roadmap';
-    roadmapTitle.textContent   = 'Unknown Roadmap';
+    roadmapTitle.textContent = 'Unknown Roadmap';
     return;
   }
 
-  document.title           = `${meta.name} — Roadmap Tracker`;
+  document.title = `${meta.name} — Roadmap Tracker`;
   navRoadmapName.textContent = meta.name;
-  roadmapTitle.textContent   = meta.name;
-  roadmapIcon.textContent    = meta.icon;
+  roadmapTitle.textContent = meta.name;
+  roadmapIcon.textContent = meta.icon;
 }
 
 /* ============================================================
@@ -814,7 +826,7 @@ function setupPageHeader(roadmapId) {
 function renderNotes() {
   notesDisplayTitle.textContent = state.notes.title || '';
   notesDisplayContent.textContent = state.notes.notes || '';
-  
+
   // Update inputs in case they are open
   notesInputTitle.value = state.notes.title || '';
   notesInputContent.value = state.notes.notes || '';
@@ -902,8 +914,8 @@ function setupNotesListeners() {
   // Toggle collapse on header click
   notesCardHeader?.addEventListener('click', (e) => {
     // Only toggle if they didn't click inside notes edit/view mode buttons or inputs
-    if (e.target.closest('button') === document.getElementById('notes-toggle-btn') || 
-        !e.target.closest('#notes-card-body')) {
+    if (e.target.closest('button') === document.getElementById('notes-toggle-btn') ||
+      !e.target.closest('#notes-card-body')) {
       toggleNotesCollapse();
     }
   });
@@ -949,12 +961,12 @@ async function init() {
   setupNotesListeners();
 
   // Show loading state initially
-  tableLoading.hidden   = false;
-  tableEmpty.hidden     = true;
+  tableLoading.hidden = false;
+  tableEmpty.hidden = true;
   tableNoResults.hidden = true;
-  tableWrapper.hidden   = true;
-  mobileCards.hidden    = true;
-  pagination.hidden     = true;
+  tableWrapper.hidden = true;
+  mobileCards.hidden = true;
+  pagination.hidden = true;
 
   try {
     // Fetch tasks and notes in parallel
