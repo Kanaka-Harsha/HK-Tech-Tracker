@@ -232,6 +232,35 @@ const Mock = {
       lastUpdated: lastRow?.updated_at || null,
     };
   },
+
+  async getNotes(roadmapId) {
+    await mockDelay();
+    const db = mockLoad();
+    if (!db.notes) db.notes = {};
+    if (!db.notes[roadmapId]) {
+      db.notes[roadmapId] = { title: '', notes: '' };
+      mockSave(db);
+    }
+    return {
+      roadmap_id: roadmapId,
+      ...db.notes[roadmapId]
+    };
+  },
+
+  async updateNotes(roadmapId, payload) {
+    await mockDelay();
+    const db = mockLoad();
+    if (!db.notes) db.notes = {};
+    db.notes[roadmapId] = {
+      title: payload.title !== undefined ? payload.title : '',
+      notes: payload.notes !== undefined ? payload.notes : ''
+    };
+    mockSave(db);
+    return {
+      roadmap_id: roadmapId,
+      ...db.notes[roadmapId]
+    };
+  },
 };
 
 /* ============================================================
@@ -315,6 +344,25 @@ const Real = {
    */
   async getRoadmapProgress(roadmapId) { // API Created
     return request(`/roadmap/${encodeURIComponent(roadmapId)}/progress`);
+  },
+
+  /**
+   * Fetch notes for a given roadmap.
+   * GET /notes/:roadmapId
+   */
+  async getNotes(roadmapId) {
+    return request(`/notes/${encodeURIComponent(roadmapId)}`);
+  },
+
+  /**
+   * Update/upsert notes for a given roadmap.
+   * PUT /notes/updateNote/:roadmapId
+   */
+  async updateNotes(roadmapId, payload) {
+    return request(`/notes/updateNote/${encodeURIComponent(roadmapId)}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
   },
 };
 

@@ -115,6 +115,56 @@
       </section>
 
       <!-- -----------------------------------------------
+           Roadmap Notes Section
+           ----------------------------------------------- -->
+      <section class="roadmap-notes-card" id="roadmap-notes-card">
+        <div class="notes-card-header" id="notes-card-header" role="button" aria-expanded="true" aria-controls="notes-card-body" tabindex="0">
+          <div class="notes-header-title">
+            <span class="notes-icon" aria-hidden="true">📝</span>
+            <h3>Roadmap Notes</h3>
+          </div>
+          <button class="notes-toggle-btn" id="notes-toggle-btn" aria-label="Toggle notes section visibility">
+            <span class="chevron-icon" id="notes-chevron-icon" aria-hidden="true">▼</span>
+          </button>
+        </div>
+        <div class="notes-card-body" id="notes-card-body">
+          
+          <!-- Read-Only View Mode -->
+          <div class="notes-view-mode" id="notes-view-mode">
+            <h4 class="notes-display-title" id="notes-display-title"></h4>
+            <div class="notes-display-content" id="notes-display-content"></div>
+            <div class="notes-actions">
+              <button class="btn btn-ghost btn-sm" id="edit-notes-btn">
+                ✏️ Edit Notes
+              </button>
+            </div>
+          </div>
+          
+          <!-- Edit Mode (hidden initially) -->
+          <div class="notes-edit-mode" id="notes-edit-mode" hidden>
+            <div class="form-group">
+              <label for="notes-input-title" class="form-label">Note Title</label>
+              <input type="text" id="notes-input-title" class="form-input" placeholder="e.g. Focus Areas, Useful Resources">
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label for="notes-input-content" class="form-label">Notes</label>
+              <textarea id="notes-input-content" class="form-input form-textarea" placeholder="Write details about your progress, links to tutorials, or algorithm summaries..." rows="5"></textarea>
+            </div>
+            <div class="notes-actions" style="margin-top: 1.25rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
+              <button class="btn btn-ghost btn-sm" id="cancel-notes-btn">Cancel</button>
+              <button class="btn btn-primary btn-sm" id="save-notes-btn">
+                <span id="save-notes-text">Save Notes</span>
+                <span id="save-notes-spinner" hidden>
+                  <span class="spinner" style="width:14px;height:14px;border-width:2px;" aria-hidden="true"></span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- -----------------------------------------------
            Toolbar: Search + Filter + Sort + Add
            ----------------------------------------------- -->
       <section class="toolbar" role="search" aria-label="Task search and filter controls">

@@ -49,6 +49,10 @@ let state = {
   filterStatus: 'all',
   searchQuery:  '',
   pendingDeleteId: null,   // row ID awaiting delete confirm
+  notes: {
+    title: '',
+    notes: ''
+  }
 };
 
 /* ============================================================
@@ -116,6 +120,23 @@ const deleteCancel       = document.getElementById('delete-cancel');
 const deleteConfirm      = document.getElementById('delete-confirm');
 const deleteBtnText      = document.getElementById('delete-btn-text');
 const deleteBtnSpinner   = document.getElementById('delete-btn-spinner');
+
+// Notes Section
+const notesCard          = document.getElementById('roadmap-notes-card');
+const notesCardHeader    = document.getElementById('notes-card-header');
+const notesChevronIcon   = document.getElementById('notes-chevron-icon');
+const notesCardBody      = document.getElementById('notes-card-body');
+const notesViewMode      = document.getElementById('notes-view-mode');
+const notesDisplayTitle  = document.getElementById('notes-display-title');
+const notesDisplayContent= document.getElementById('notes-display-content');
+const editNotesBtn       = document.getElementById('edit-notes-btn');
+const notesEditMode      = document.getElementById('notes-edit-mode');
+const notesInputTitle    = document.getElementById('notes-input-title');
+const notesInputContent  = document.getElementById('notes-input-content');
+const cancelNotesBtn     = document.getElementById('cancel-notes-btn');
+const saveNotesBtn       = document.getElementById('save-notes-btn');
+const saveNotesText      = document.getElementById('save-notes-text');
+const saveNotesSpinner   = document.getElementById('save-notes-spinner');
 
 /* ============================================================
    Toast Utility
@@ -783,6 +804,126 @@ function setupPageHeader(roadmapId) {
   roadmapIcon.textContent    = meta.icon;
 }
 
+/* ============================================================
+   Roadmap Notes Functionality
+   ============================================================ */
+
+/**
+ * Render notes state to the UI.
+ */
+function renderNotes() {
+  notesDisplayTitle.textContent = state.notes.title || '';
+  notesDisplayContent.textContent = state.notes.notes || '';
+  
+  // Update inputs in case they are open
+  notesInputTitle.value = state.notes.title || '';
+  notesInputContent.value = state.notes.notes || '';
+
+  // Setup collapse/expand state from localStorage
+  const isCollapsed = localStorage.getItem(`notes_collapsed_${state.roadmapId}`) === 'true';
+  if (isCollapsed) {
+    notesCard.classList.add('collapsed');
+    notesCardHeader.setAttribute('aria-expanded', 'false');
+  } else {
+    notesCard.classList.remove('collapsed');
+    notesCardHeader.setAttribute('aria-expanded', 'true');
+  }
+}
+
+/**
+ * Toggle the collapse/expand state of the notes section.
+ */
+function toggleNotesCollapse() {
+  const willCollapse = !notesCard.classList.contains('collapsed');
+  if (willCollapse) {
+    notesCard.classList.add('collapsed');
+    notesCardHeader.setAttribute('aria-expanded', 'false');
+  } else {
+    notesCard.classList.remove('collapsed');
+    notesCardHeader.setAttribute('aria-expanded', 'true');
+  }
+  localStorage.setItem(`notes_collapsed_${state.roadmapId}`, String(willCollapse));
+}
+
+/**
+ * Switch notes card to edit mode.
+ */
+function enterNotesEditMode() {
+  notesInputTitle.value = state.notes.title || '';
+  notesInputContent.value = state.notes.notes || '';
+  notesViewMode.hidden = true;
+  notesEditMode.hidden = false;
+  notesInputTitle.focus();
+}
+
+/**
+ * Exit edit mode without saving.
+ */
+function exitNotesEditMode() {
+  notesViewMode.hidden = false;
+  notesEditMode.hidden = true;
+}
+
+/**
+ * Save notes via the API.
+ */
+async function saveNotes() {
+  const title = notesInputTitle.value.trim();
+  const notes = notesInputContent.value.trim();
+
+  saveNotesText.hidden = true;
+  saveNotesSpinner.hidden = false;
+  saveNotesBtn.disabled = true;
+  cancelNotesBtn.disabled = true;
+
+  try {
+    const updated = await API.updateNotes(state.roadmapId, { title, notes });
+    state.notes = {
+      title: (updated && updated.title !== undefined && updated.title !== null) ? updated.title : title,
+      notes: (updated && updated.notes !== undefined && updated.notes !== null) ? updated.notes : notes
+    };
+    renderNotes();
+    exitNotesEditMode();
+    showToast('Notes saved successfully.', 'success');
+  } catch (err) {
+    showToast(err.message || 'Failed to save notes. Please try again.', 'error');
+  } finally {
+    saveNotesText.hidden = false;
+    saveNotesSpinner.hidden = true;
+    saveNotesBtn.disabled = false;
+    cancelNotesBtn.disabled = false;
+  }
+}
+
+/**
+ * Attach event listeners for the notes section.
+ */
+function setupNotesListeners() {
+  // Toggle collapse on header click
+  notesCardHeader?.addEventListener('click', (e) => {
+    // Only toggle if they didn't click inside notes edit/view mode buttons or inputs
+    if (e.target.closest('button') === document.getElementById('notes-toggle-btn') || 
+        !e.target.closest('#notes-card-body')) {
+      toggleNotesCollapse();
+    }
+  });
+
+  // Support hitting Enter or Space on header for accessibility
+  notesCardHeader?.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('#notes-card-body')) {
+      e.preventDefault();
+      toggleNotesCollapse();
+    }
+  });
+
+  // Mode switching
+  editNotesBtn?.addEventListener('click', enterNotesEditMode);
+  cancelNotesBtn?.addEventListener('click', exitNotesEditMode);
+
+  // Save button
+  saveNotesBtn?.addEventListener('click', saveNotes);
+}
+
 /**
  * Main init: load roadmap ID, apply theme, fetch data, render.
  */
@@ -804,6 +945,9 @@ async function init() {
   // Set page header metadata
   setupPageHeader(roadmapId);
 
+  // Set up notes event listeners
+  setupNotesListeners();
+
   // Show loading state initially
   tableLoading.hidden   = false;
   tableEmpty.hidden     = true;
@@ -813,8 +957,23 @@ async function init() {
   pagination.hidden     = true;
 
   try {
-    const rows = await API.getRows(roadmapId);
+    // Fetch tasks and notes in parallel
+    const [rows, notesData] = await Promise.all([
+      API.getRows(roadmapId),
+      API.getNotes(roadmapId).catch(err => {
+        console.error('Failed to load roadmap notes:', err);
+        return { title: '', notes: '' };
+      })
+    ]);
+
     state.allRows = rows || [];
+    state.notes = {
+      title: notesData?.title || '',
+      notes: notesData?.notes || ''
+    };
+
+    // Render notes initial state
+    renderNotes();
 
     // Hide loading spinner now that fetch is complete
     tableLoading.hidden = true;
