@@ -4,10 +4,12 @@
  *
  * Responsibilities:
  *  - Auth guard: redirect to login if no token
- *  - Fetch progress data for all 10 roadmaps via API
+ *  - Fetch progress data for all roadmaps via API
  *  - Render roadmap cards dynamically with progress bars
  *  - Compute and display overall stats (total, completed, ongoing, pending)
  *  - Handle card navigation to roadmap.html?id=<roadmapId>
+ *  - Handle "Add Roadmap" (modal → API.createRoadmap → refresh)
+ *  - Handle "Delete Roadmap" (confirm modal → API.deleteRoadmap → refresh)
  *  - Handle logout
  *  - Toast notifications
  */
@@ -35,6 +37,24 @@ const statCompleted     = document.getElementById('stat-completed');
 const statOngoing       = document.getElementById('stat-ongoing');
 const statPending       = document.getElementById('stat-pending');
 
+// Add Roadmap modal
+const addRoadmapBtn      = document.getElementById('add-roadmap-btn');
+const addRoadmapModal    = document.getElementById('add-roadmap-modal');
+const addModalCloseBtn   = document.getElementById('add-modal-close-btn');
+const addModalCancelBtn  = document.getElementById('add-modal-cancel-btn');
+const addRoadmapSubmit   = document.getElementById('add-roadmap-submit-btn');
+const addSubmitLabel     = document.getElementById('add-submit-label');
+const roadmapIdInput     = document.getElementById('roadmap-id-input');
+const roadmapNameInput   = document.getElementById('roadmap-name-input');
+const roadmapIconInput   = document.getElementById('roadmap-icon-input');
+
+// Delete Roadmap modal
+const deleteRoadmapModal   = document.getElementById('delete-roadmap-modal');
+const delModalCloseBtn     = document.getElementById('del-modal-close-btn');
+const delModalCancelBtn    = document.getElementById('del-modal-cancel-btn');
+const deleteConfirmBtn     = document.getElementById('delete-roadmap-confirm-btn');
+const deleteRoadmapLabel   = document.getElementById('delete-roadmap-name-label');
+
 /* ============================================================
    Toast Utility
    ============================================================ */
@@ -46,6 +66,20 @@ function showToast(msg, type = 'info') {
   toast.hidden = false;
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+}
+
+/* ============================================================
+   Modal Helpers
+   ============================================================ */
+function openModal(modal) {
+  modal.hidden = false;
+  // Trap focus — focus first input or button inside
+  const focusable = modal.querySelector('input, button, [tabindex]');
+  if (focusable) focusable.focus();
+}
+
+function closeModal(modal) {
+  modal.hidden = true;
 }
 
 /* ============================================================
@@ -78,6 +112,10 @@ function createRoadmapCard(roadmap, progress) {
     <!-- Arrow hint (appears on hover via CSS) -->
     <span class="card-arrow" aria-hidden="true">→</span>
 
+    <!-- Delete button -->
+    <button class="card-delete-btn" data-roadmap-id="${escapeHtml(id)}" data-roadmap-name="${escapeHtml(name)}"
+      aria-label="Delete ${escapeHtml(name)} roadmap" title="Delete roadmap">✕</button>
+
     <!-- Card Header -->
     <div class="card-header">
       <div class="card-icon" aria-hidden="true">${icon}</div>
@@ -109,17 +147,26 @@ function createRoadmapCard(roadmap, progress) {
     </div>
   `;
 
-  // Navigate on click or Enter/Space
-  function navigate() {
+  // Navigate on click or Enter/Space (but not the delete button)
+  function navigate(e) {
+    if (e.target.closest('.card-delete-btn')) return;
     window.location.href = `roadmap.html?id=${id}`;
   }
 
   article.addEventListener('click', navigate);
   article.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target.closest('.card-delete-btn')) return;
       e.preventDefault();
-      navigate();
+      navigate(e);
     }
+  });
+
+  // Delete button
+  const deleteBtn = article.querySelector('.card-delete-btn');
+  deleteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openDeleteModal(id, name);
   });
 
   // Animate progress bar after a short delay (for visual effect)
@@ -155,10 +202,11 @@ function renderCards(items) {
   });
 
   // Update stats bar
-  statTotalTasks.textContent = totalTasks   || '0';
-  statCompleted.textContent  = totalCompleted || '0';
-  statOngoing.textContent    = totalOngoing  || '0';
-  statPending.textContent    = totalPending  || '0';
+  statTotalRoadmaps.textContent = items.length      || '0';
+  statTotalTasks.textContent    = totalTasks        || '0';
+  statCompleted.textContent     = totalCompleted    || '0';
+  statOngoing.textContent       = totalOngoing      || '0';
+  statPending.textContent       = totalPending      || '0';
 }
 
 /* ============================================================
@@ -207,6 +255,113 @@ async function loadDashboard() {
     renderCards(fallback);
   }
 }
+
+/* ============================================================
+   Add Roadmap — Modal Logic
+   ============================================================ */
+
+function openAddModal() {
+  roadmapIdInput.value   = '';
+  roadmapNameInput.value = '';
+  roadmapIconInput.value = '';
+  openModal(addRoadmapModal);
+}
+
+function closeAddModal() {
+  closeModal(addRoadmapModal);
+}
+
+addRoadmapBtn?.addEventListener('click', openAddModal);
+addModalCloseBtn?.addEventListener('click', closeAddModal);
+addModalCancelBtn?.addEventListener('click', closeAddModal);
+
+// Close on overlay click
+addRoadmapModal?.addEventListener('click', (e) => {
+  if (e.target === addRoadmapModal) closeAddModal();
+});
+
+// Submit — Create Roadmap
+addRoadmapSubmit?.addEventListener('click', async () => {
+  const id   = roadmapIdInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+  const name = roadmapNameInput.value.trim();
+  const icon = roadmapIconInput.value.trim() || '📌';
+
+  if (!id) {
+    showToast('Please enter a Roadmap ID.', 'error');
+    roadmapIdInput.focus();
+    return;
+  }
+  if (!name) {
+    showToast('Please enter a Display Name.', 'error');
+    roadmapNameInput.focus();
+    return;
+  }
+
+  addRoadmapSubmit.disabled = true;
+  addSubmitLabel.textContent = 'Creating...';
+
+  try {
+    await API.createRoadmap({ id, name, icon });
+    // Register in local theme registry so dashboard shows it immediately
+    Theme.registerRoadmap(id, { name, icon, color: '#6366f1' });
+    showToast(`Roadmap "${name}" created successfully!`, 'success');
+    closeAddModal();
+    await loadDashboard();
+  } catch (err) {
+    showToast(err.message || 'Failed to create roadmap.', 'error');
+  } finally {
+    addRoadmapSubmit.disabled = false;
+    addSubmitLabel.textContent = 'Create Roadmap';
+  }
+});
+
+/* ============================================================
+   Delete Roadmap — Modal Logic
+   ============================================================ */
+
+let _pendingDeleteId   = null;
+let _pendingDeleteName = null;
+
+function openDeleteModal(id, name) {
+  _pendingDeleteId   = id;
+  _pendingDeleteName = name;
+  deleteRoadmapLabel.textContent = name;
+  openModal(deleteRoadmapModal);
+}
+
+function closeDeleteModal() {
+  _pendingDeleteId   = null;
+  _pendingDeleteName = null;
+  closeModal(deleteRoadmapModal);
+}
+
+delModalCloseBtn?.addEventListener('click', closeDeleteModal);
+delModalCancelBtn?.addEventListener('click', closeDeleteModal);
+
+deleteRoadmapModal?.addEventListener('click', (e) => {
+  if (e.target === deleteRoadmapModal) closeDeleteModal();
+});
+
+deleteConfirmBtn?.addEventListener('click', async () => {
+  if (!_pendingDeleteId) return;
+
+  deleteConfirmBtn.disabled = true;
+  deleteConfirmBtn.textContent = 'Deleting...';
+
+  try {
+    await API.deleteRoadmap(_pendingDeleteId);
+    // Remove from local theme registry
+    Theme.unregisterRoadmap(_pendingDeleteId);
+    showToast(`Roadmap "${_pendingDeleteName}" deleted.`, 'success');
+    closeDeleteModal();
+    await loadDashboard();
+  } catch (err) {
+    showToast(err.message || 'Failed to delete roadmap.', 'error');
+  } finally {
+    deleteConfirmBtn.disabled = false;
+    deleteConfirmBtn.textContent = 'Delete';
+  }
+});
 
 /* ============================================================
    Logout

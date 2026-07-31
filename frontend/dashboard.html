@@ -59,14 +59,21 @@
 
       <!-- Page Header -->
       <section class="page-header" aria-labelledby="page-heading">
-        <h1 class="page-title" id="page-heading">My Roadmaps</h1>
-        <p class="page-subtitle">Track your progress across all learning paths</p>
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title" id="page-heading">My Roadmaps</h1>
+            <p class="page-subtitle">Track your progress across all learning paths</p>
+          </div>
+          <button class="btn btn-primary btn-add-roadmap" id="add-roadmap-btn" aria-label="Add a new roadmap">
+            <span aria-hidden="true">＋</span> Add Roadmap
+          </button>
+        </div>
       </section>
 
       <!-- Overall Stats Bar -->
       <section class="stats-bar" id="stats-bar" aria-label="Overall progress statistics">
         <div class="stat-item">
-          <span class="stat-value" id="stat-total-roadmaps">10</span>
+          <span class="stat-value" id="stat-total-roadmaps">—</span>
           <span class="stat-label">Roadmaps</span>
         </div>
         <div class="stat-item">
@@ -97,32 +104,7 @@
         </div>
 
         <!-- Cards grid (shown after load, populated by dashboard.js) -->
-        <div class="cards-grid" id="cards-grid" hidden>
-          <!--
-            Each card is dynamically rendered by dashboard.js.
-            Card structure (for reference):
-            <article class="roadmap-card" data-roadmap="dsa" tabindex="0" role="link" aria-label="Open DSA roadmap">
-              <div class="card-header">
-                <div class="card-icon" aria-hidden="true">...</div>
-                <div class="card-title-group">
-                  <h2 class="card-title">DSA</h2>
-                  <p class="card-last-updated">Updated Jul 26</p>
-                </div>
-              </div>
-              <div class="card-stats">
-                <span class="card-stat"><strong>18</strong> Completed</span>
-                <span class="card-stat"><strong>4</strong> Ongoing</span>
-                <span class="card-stat"><strong>3</strong> Pending</span>
-              </div>
-              <div class="card-progress" aria-label="72% complete">
-                <div class="progress-bar-track">
-                  <div class="progress-bar-fill" style="width: 72%"></div>
-                </div>
-                <span class="progress-label">72%</span>
-              </div>
-            </article>
-          -->
-        </div>
+        <div class="cards-grid" id="cards-grid" hidden></div>
 
       </section>
 
@@ -131,6 +113,84 @@
 
   <!-- Toast Notification -->
   <div class="toast" id="toast" role="alert" aria-live="assertive" hidden></div>
+
+  <!-- =====================================================
+       Add Roadmap Modal
+       ===================================================== -->
+  <div class="modal-overlay" id="add-roadmap-modal" role="dialog" aria-modal="true"
+       aria-labelledby="modal-add-title" hidden>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-add-title">Add New Roadmap</h2>
+        <button class="modal-close-btn" id="add-modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="roadmap-id-input">Roadmap ID <span class="form-required">*</span></label>
+          <input
+            type="text"
+            id="roadmap-id-input"
+            class="form-input"
+            placeholder="e.g. javascript, rust, docker"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <p class="form-hint">Lowercase, no spaces. Used in URL and API.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="roadmap-name-input">Display Name <span class="form-required">*</span></label>
+          <input
+            type="text"
+            id="roadmap-name-input"
+            class="form-input"
+            placeholder="e.g. JavaScript, Rust, Docker"
+            autocomplete="off"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="roadmap-icon-input">Icon (emoji)</label>
+          <input
+            type="text"
+            id="roadmap-icon-input"
+            class="form-input form-input--emoji"
+            placeholder="e.g. 🦀"
+            maxlength="4"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="add-modal-cancel-btn">Cancel</button>
+        <button class="btn btn-primary" id="add-roadmap-submit-btn">
+          <span id="add-submit-label">Create Roadmap</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       Delete Confirm Modal
+       ===================================================== -->
+  <div class="modal-overlay" id="delete-roadmap-modal" role="dialog" aria-modal="true"
+       aria-labelledby="modal-delete-title" hidden>
+    <div class="modal-box modal-box--danger">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-delete-title">Delete Roadmap</h2>
+        <button class="modal-close-btn" id="del-modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-danger-msg">
+          Are you sure you want to delete
+          <strong id="delete-roadmap-name-label"></strong>?
+          <br /><br />
+          This will permanently remove the roadmap and all its tasks from the backend. This action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="del-modal-cancel-btn">Cancel</button>
+        <button class="btn btn-danger" id="delete-roadmap-confirm-btn">Delete</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/theme.js"></script>

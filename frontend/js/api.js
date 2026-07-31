@@ -12,6 +12,8 @@
  *   await API.updateRow('dsa', id, patch);
  *   await API.deleteRow('dsa', id);
  *   const prog  = await API.getRoadmapProgress('dsa');
+ *   const rm    = await API.createRoadmap({ id, name, icon });
+ *   await API.deleteRoadmap('my-roadmap');
  *
  * ─────────────────────────────────────────────
  * MOCK MODE
@@ -267,6 +269,20 @@ const Mock = {
       ...db.notes[roadmapId]
     };
   },
+
+  async createRoadmap(payload) {
+    await mockDelay();
+    // Mock: just return the payload as if created
+    return { message: 'Roadmap created (mock)', ...payload };
+  },
+
+  async deleteRoadmap(roadmapId) {
+    await mockDelay();
+    const db = mockLoad();
+    delete db[roadmapId];
+    mockSave(db);
+    return null;
+  },
 };
 
 /* ============================================================
@@ -381,6 +397,30 @@ const Real = {
     return request(`/notes/updateNote/${encodeURIComponent(roadmapId)}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Create a new roadmap.
+   * POST /roadmap/create
+   * Body: { id, name, icon }
+   * Returns: { message, id, name, created_at }
+   */
+  async createRoadmap(payload) {
+    return request('/roadmap/create', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Delete a roadmap by its ID.
+   * DELETE /roadmap/:roadmapId
+   * Returns: null
+   */
+  async deleteRoadmap(roadmapId) {
+    return request(`/roadmap/${encodeURIComponent(roadmapId)}`, {
+      method: 'DELETE',
     });
   },
 };

@@ -111,6 +111,30 @@ function getAllRoadmaps() {
   return Object.entries(ROADMAP_META).map(([id, meta]) => ({ id, ...meta }));
 }
 
+/**
+ * Dynamically register a new roadmap into the local registry.
+ * Used after a successful API.createRoadmap call so the dashboard
+ * can show the new card immediately without a full page refresh.
+ * @param {string} id
+ * @param {{ name: string, icon: string, color: string }} meta
+ */
+function registerRoadmap(id, meta) {
+  ROADMAP_META[id.toLowerCase()] = {
+    name:  meta.name  || id,
+    icon:  meta.icon  || '📌',
+    color: meta.color || '#6366f1',
+  };
+}
+
+/**
+ * Remove a roadmap from the local registry.
+ * Used after a successful API.deleteRoadmap call.
+ * @param {string} id
+ */
+function unregisterRoadmap(id) {
+  delete ROADMAP_META[id.toLowerCase()];
+}
+
 // Expose to global scope for use by other scripts
 window.Theme = {
   apply: applyTheme,
@@ -118,4 +142,6 @@ window.Theme = {
   applyRoadmapTheme,
   getRoadmapMeta,
   getAllRoadmaps,
+  registerRoadmap,
+  unregisterRoadmap,
 };
