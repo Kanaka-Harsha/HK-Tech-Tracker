@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Sign in to your personal Roadmap Tracker" />
+  <meta name="description" content="Sign in or create an account for your personal Roadmap Tracker" />
   <title>Sign In — Roadmap Tracker</title>
 
   <!-- Preconnect for font performance -->
@@ -38,7 +38,7 @@
   </button>
 
   <!-- =====================================================
-       Login Page — Centered Card
+       Login / Signup Page — Centered Card
        ===================================================== -->
   <main class="login-container" role="main" id="login-container">
     <div class="login-card" id="login-card">
@@ -53,69 +53,214 @@
       <!-- Divider -->
       <hr class="divider" />
 
-      <!-- Login Form -->
-      <form class="login-form" id="login-form" novalidate autocomplete="on">
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+        <button
+          class="auth-tab active"
+          id="tab-login"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-login"
+          data-tab="login"
+        >Sign In</button>
+        <button
+          class="auth-tab"
+          id="tab-signup"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-signup"
+          data-tab="signup"
+        >Sign Up</button>
+        <span class="auth-tab-indicator" id="tab-indicator" aria-hidden="true"></span>
+      </div>
 
-        <!-- Global error alert (shown on wrong credentials) -->
+      <!-- ── LOGIN PANEL ── -->
+      <div class="auth-panel" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+
+        <!-- Global error alert -->
         <div class="form-alert" id="login-alert" role="alert" hidden></div>
 
-        <!-- Username -->
-        <div class="form-group">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            class="form-input"
-            placeholder="Enter your username"
-            autocomplete="username"
-            spellcheck="false"
-            required
-          />
-          <span class="form-error" id="username-error" role="alert"></span>
-        </div>
+        <form class="login-form" id="login-form" novalidate autocomplete="on">
 
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <div class="password-wrapper">
+          <!-- Username -->
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
             <input
-              type="password"
-              id="password"
-              name="password"
+              type="text"
+              id="username"
+              name="username"
               class="form-input"
-              placeholder="Enter your password"
-              autocomplete="current-password"
+              placeholder="Enter your username"
+              autocomplete="username"
+              spellcheck="false"
               required
             />
-            <!-- Toggle password visibility -->
-            <button
-              type="button"
-              class="password-toggle"
-              id="password-toggle"
-              aria-label="Show password"
-              tabindex="-1"
-            >
-              <span id="password-toggle-icon" aria-hidden="true">👁</span>
-            </button>
+            <span class="form-error" id="username-error" role="alert"></span>
           </div>
-          <span class="form-error" id="password-error" role="alert"></span>
-        </div>
 
-        <!-- Submit -->
-        <button
-          type="submit"
-          class="btn btn-primary btn-full"
-          id="login-btn"
-          aria-label="Sign in to Roadmap Tracker"
-        >
-          <span class="btn-text" id="login-btn-text">Sign In</span>
-          <span class="login-spinner" id="login-spinner" aria-hidden="true" hidden>
-            <span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>
-          </span>
-        </button>
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                id="password-toggle"
+                aria-label="Show password"
+                tabindex="-1"
+              >
+                <span id="password-toggle-icon" aria-hidden="true">👁</span>
+              </button>
+            </div>
+            <span class="form-error" id="password-error" role="alert"></span>
+          </div>
 
-      </form>
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="btn btn-primary btn-full"
+            id="login-btn"
+            aria-label="Sign in to Roadmap Tracker"
+          >
+            <span class="btn-text" id="login-btn-text">Sign In</span>
+            <span class="login-spinner" id="login-spinner" aria-hidden="true" hidden>
+              <span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>
+            </span>
+          </button>
+
+        </form>
+
+        <!-- Switch hint -->
+        <p class="auth-switch-hint">
+          Don't have an account?
+          <button type="button" class="auth-switch-link" id="go-to-signup">Sign Up</button>
+        </p>
+
+      </div><!-- /panel-login -->
+
+      <!-- ── SIGNUP PANEL ── -->
+      <div class="auth-panel hidden" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup">
+
+        <!-- Global error alert -->
+        <div class="form-alert" id="signup-alert" role="alert" hidden></div>
+
+        <form class="login-form" id="signup-form" novalidate autocomplete="off">
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="signup-name" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="signup-name"
+              name="name"
+              class="form-input"
+              placeholder="Enter your full name"
+              autocomplete="name"
+              spellcheck="false"
+              required
+            />
+            <span class="form-error" id="signup-name-error" role="alert"></span>
+          </div>
+
+          <!-- Username -->
+          <div class="form-group">
+            <label for="signup-username" class="form-label">Username</label>
+            <input
+              type="text"
+              id="signup-username"
+              name="user_id"
+              class="form-input"
+              placeholder="Choose a username"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <span class="form-error" id="signup-username-error" role="alert"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="signup-password" class="form-label">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="signup-password"
+                name="user_pass"
+                class="form-input"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                id="signup-password-toggle"
+                aria-label="Show password"
+                tabindex="-1"
+              >
+                <span id="signup-password-toggle-icon" aria-hidden="true">👁</span>
+              </button>
+            </div>
+            <span class="form-error" id="signup-password-error" role="alert"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label for="signup-confirm" class="form-label">Confirm Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="signup-confirm"
+                name="confirm_pass"
+                class="form-input"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                id="signup-confirm-toggle"
+                aria-label="Show confirm password"
+                tabindex="-1"
+              >
+                <span id="signup-confirm-toggle-icon" aria-hidden="true">👁</span>
+              </button>
+            </div>
+            <span class="form-error" id="signup-confirm-error" role="alert"></span>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="btn btn-primary btn-full"
+            id="signup-btn"
+            aria-label="Create account"
+          >
+            <span class="btn-text" id="signup-btn-text">Create Account</span>
+            <span class="login-spinner" id="signup-spinner" aria-hidden="true" hidden>
+              <span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>
+            </span>
+          </button>
+
+        </form>
+
+        <!-- Switch hint -->
+        <p class="auth-switch-hint">
+          Already have an account?
+          <button type="button" class="auth-switch-link" id="go-to-login">Sign In</button>
+        </p>
+
+      </div><!-- /panel-signup -->
 
     </div>
   </main>

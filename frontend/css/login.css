@@ -220,7 +220,109 @@
 
 
 /* ============================================================
-   7. Responsive
+   7. Auth Tabs
+   ============================================================ */
+
+.auth-tabs {
+  position: relative;
+  display: flex;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 1.25rem;
+  gap: 0;
+}
+
+.auth-tab {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.auth-tab.active {
+  color: var(--color-text-primary);
+}
+
+/* Sliding pill indicator */
+.auth-tab-indicator {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.auth-tab-indicator.slide-right {
+  transform: translateX(100%);
+}
+
+
+/* ============================================================
+   8. Auth Panels
+   ============================================================ */
+
+.auth-panel {
+  animation: panel-in 0.25s ease both;
+}
+
+.auth-panel.hidden {
+  display: none;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================================
+   9. Switch Hint
+   ============================================================ */
+
+.auth-switch-hint {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.auth-switch-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--color-accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.15s ease;
+}
+
+.auth-switch-link:hover {
+  opacity: 0.8;
+}
+
+
+/* ============================================================
+   10. Responsive
    ============================================================ */
 
 @media (max-width: 480px) {

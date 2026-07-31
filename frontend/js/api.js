@@ -164,6 +164,12 @@ const Mock = {
     throw new Error('Invalid username or password.');
   },
 
+  async signup(name, user_id, user_pass) {
+    await mockDelay();
+    // In mock mode just accept any signup
+    return { message: 'Signup Successful' };
+  },
+
   async logout() {
     await mockDelay(80);
     _mockToken = null;
@@ -278,6 +284,19 @@ const Real = {
     return request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ user_id, user_pass }),
+    });
+  },
+
+  /**
+   * Register a new user.
+   * POST /auth/signup
+   * Body: { name, user_id, user_pass }
+   * Returns: { message: string }
+   */
+  async signup(name, user_id, user_pass) { // API CREATED
+    return request('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ name, user_id, user_pass }),
     });
   },
 
